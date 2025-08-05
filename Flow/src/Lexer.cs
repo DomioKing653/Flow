@@ -1,0 +1,174 @@
+﻿using System.Net.Mail;
+
+namespace Flow;
+
+/*
+ * Errors
+ */
+public class Error(string name, string message)
+{
+    private string Message { get; set; } = message;
+    private string Name { get; set; } = name;
+
+    public override string ToString()
+    {
+        return $"{Name}: {Message}";
+    }
+}
+
+/*
+ * Tokens
+ */
+public static class TokenType
+{
+    public const string TtPlus = "PLUS";
+    public const string TtMinus = "MINUS";
+    public const string TtMul = "MULTIPLY";
+    public const string TtDiv = "DIVIDE";
+    public const string TtRParen = "RPAREN";
+    public const string TtLParen = "LPAREN";
+    public const string TtInt = "INT";
+    public const string TtFLo = "FLOAT";
+}
+
+public class Token(string type, string? value)
+{
+    public readonly string Type = type;
+    public readonly string? Value=value;
+    public override string ToString()
+    {
+        if (Value != null)
+        {
+            return $"{Type} -> {Value}";
+        }
+        else
+        {
+            return $"{Type}";
+        }
+    }
+}
+
+/*
+ *Lexer
+ */
+public class Lexer
+{
+    readonly string? _text;
+    private int _tokenIdx;
+    private char _currentToken;
+    private readonly List<Token> _tokens;
+
+    public Lexer(string? input)
+    {
+        this._text = input;
+        this._tokenIdx = -1;
+        NextToken();
+        _tokens = new List<Token>();
+    }
+
+    /*
+     * Creating numbers
+     */
+    private void MakeNumber()
+    {
+        string number = "";
+        int dotCount = 0;
+        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.')
+        {
+            if (_currentToken == '.')
+            {
+                if (dotCount > 1)
+                {
+                    break;
+                }
+                dotCount++;
+                number += _currentToken.ToString();
+                NextToken();
+            }
+            else
+            {
+                number += _currentToken.ToString();
+                NextToken();
+            }
+        }
+        
+        if (dotCount == 0)
+        {
+            _tokens.Add(new Token(TokenType.TtInt, number));
+            return;
+        }
+        if (dotCount > 1)
+        {
+            throw new Exception("Invalid '.'");
+        }
+        else
+        {
+            _tokens.Add(new Token(TokenType.TtFLo, number));
+        }
+        
+    }
+
+    /*
+     * Creating tokens
+     */
+    public List<Token> Tokenize()
+    {
+        while (_currentToken != '\0')
+        {
+            switch (_currentToken)
+            {
+                case '+':
+                    _tokens.Add(new Token(TokenType.TtPlus, null));
+                    NextToken();
+                    break;
+                case '-':
+                    _tokens.Add(new Token(TokenType.TtMinus, null));
+                    NextToken();
+                    break;
+                case ')':
+                    _tokens.Add(new Token(TokenType.TtRParen, null));
+                    NextToken();
+                    break;
+                case '(':
+                    _tokens.Add(new Token(TokenType.TtLParen, null));
+                    NextToken();
+                    break;
+                case '*':
+                    _tokens.Add(new Token(TokenType.TtMul, null));
+                    NextToken();
+                    break;
+                case '/':
+                    _tokens.Add(new Token(TokenType.TtDiv, null));
+                    NextToken();
+                    break;
+
+                default:
+                    bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
+                    if (isNumber)
+                    {
+                        MakeNumber();
+                    }
+                    else
+                    {
+                        Error illegalChar = new Error("Illegal character", _currentToken.ToString());
+                        Console.WriteLine(illegalChar.ToString());
+                        Console.ReadKey();
+                        Run.Main(null);
+                    }
+
+                    break;
+            }
+        }
+
+        return _tokens;
+    }
+
+    /*
+     * Advancing position
+     */
+    void NextToken()
+    {
+        _tokenIdx++;
+        _currentToken = _text != null && _tokenIdx < _text.Length ? _text[_tokenIdx] : '\0';
+    }
+}

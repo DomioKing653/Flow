@@ -1,0 +1,14 @@
+C:\Users\simon\RiderProjects\Flow\Flow\bin\Debug\net9.0\Flow.exe
+C:\Users\simon\RiderProjects\Flow\Flow\bin\Debug\net9.0\Flow.deps.json
+C:\Users\simon\RiderProjects\Flow\Flow\bin\Debug\net9.0\Flow.runtimeconfig.json
+C:\Users\simon\RiderProjects\Flow\Flow\bin\Debug\net9.0\Flow.dll
+C:\Users\simon\RiderProjects\Flow\Flow\bin\Debug\net9.0\Flow.pdb
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.AssemblyInfoInputs.cache
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.AssemblyInfo.cs
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.csproj.CoreCompileInputs.cache
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.dll
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\refint\Flow.dll
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.pdb
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.genruntimeconfig.cache
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\ref\Flow.dll
