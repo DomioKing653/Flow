@@ -73,18 +73,26 @@ public class Parser
     void NextToken()
     {
         _tokenIdx++;
-        _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : null;
-
+        if (_tokenIdx < _tokens.Count)
+        {
+            _currentToken = _tokens[_tokenIdx];
+        }
+        else
+        {
+            _currentToken = new Token(TokenType.TtEof, null);
+        }
     }
 
 
     public Node Parse()
-    { 
+    {
         Node res = Expr();
-        if (_currentToken == null || _currentToken.Type != TokenType.TtEof)
+
+        if (_currentToken.Type != TokenType.TtEof)
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
         }
+
         return res;
     }
 
@@ -93,7 +101,9 @@ public class Parser
         string[] numbs = [TokenType.TtFLo, TokenType.TtInt];
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
-            return new NumberNode(_currentToken);    
+            var node=new NumberNode(_currentToken);
+            NextToken();
+            return node;    
         }
         else
         {
@@ -106,16 +116,13 @@ public class Parser
     {
         string[] ops = [TokenType.TtMul, TokenType.TtDiv];
         Node left = Factor();
-        NextToken();
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {
             Token? opToken = _currentToken;
             NextToken();
             Node right = Factor();
             left = new BinaryOpNode(left, opToken, right);
-            NextToken();
         }
-
         return left;
     }
     Node Expr()
@@ -128,9 +135,7 @@ public class Parser
             NextToken();
             Node right = Term();
             left = new BinaryOpNode(left, opToken, right);
-            NextToken();
         }
-
         return left;
     }
 }

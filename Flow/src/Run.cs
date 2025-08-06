@@ -31,9 +31,5 @@ static class Run
             Console.WriteLine(e);
             Main(null);
         }
-        catch (Exception e)
-        {
-            
-        }
     }
 }
