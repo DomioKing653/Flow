@@ -3,7 +3,7 @@
 public class Interpreter
 {
 
-    public double Visit(Node node)
+    public double Interpret(Node node)
     {
         if (node is NumberNode numNode)
         {
@@ -27,8 +27,8 @@ public class Interpreter
 
     double VisitBinaryOp(BinaryOpNode node)
     {
-        double left = Visit(node.Left);
-        double right = Visit(node.Right);
+        double left = Interpret(node.Left);
+        double right = Interpret(node.Right);
 
         switch (node.Op?.Type)
         {

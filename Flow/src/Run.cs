@@ -23,7 +23,7 @@ static class Run
                 Node ast=parser.Parse();
                 Console.WriteLine(ast.ToString());
                 Interpreter interpreter=new Interpreter();
-                double result=interpreter.Visit(ast);
+                double result=interpreter.Interpret(ast);
                 Console.WriteLine(result);
                 
                 Main(null);

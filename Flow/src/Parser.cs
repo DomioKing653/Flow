@@ -116,7 +116,6 @@ public class Parser
             NextToken();         
             Node right = Factor();
             left = new BinaryOpNode(left, opToken, right);
-            NextToken();
         }
 
         return left;
@@ -132,9 +131,7 @@ public class Parser
             NextToken();         
             Node right = Term();
             left = new BinaryOpNode(left, opToken, right);
-            NextToken();
         }
-
         return left;
     }
 }
