@@ -2,10 +2,19 @@
 
 public class Interpreter
 {
-    private BinaryOpNode _ast = null!;
-
-    public string Interpret()
+    private readonly BinaryOpNode _ast = null!;
+    private string? _final;
+    public string? Interpret()
     {
-        return "";
+        while (true)
+        {
+            if (_ast.Left is BinaryOpNode)
+            {
+                _final = _ast.Left.ToString();
+                break;
+            }
+        }
+
+        return _final;
     }
 }

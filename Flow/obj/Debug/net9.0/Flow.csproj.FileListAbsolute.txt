@@ -12,3 +12,4 @@ C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\refint\Flow.dll
 C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.pdb
 C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.genruntimeconfig.cache
 C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\ref\Flow.dll
+C:\Users\simon\RiderProjects\Flow\Flow\obj\Debug\net9.0\Flow.sourcelink.json

@@ -11,6 +11,11 @@ public class SyntaxError(string expected,string details):Exception
     }
 }
 
+class MyClass
+{
+    
+}
+
 /*
  * Nodes
  */
@@ -31,9 +36,12 @@ class NumberNode(Token? token) : Node
 
 class BinaryOpNode(Node left, Token? opTok, Node right) : Node
 {
+    public readonly Node Left = left;
+    public readonly Node Right = right;
+    public readonly Token? Op = opTok;
     public override string ToString()
     {
-        return $"({left} {opTok} {right})";
+        return $"({Left} {Op} {Right})";
     }
 }
 
