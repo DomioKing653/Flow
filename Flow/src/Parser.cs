@@ -102,6 +102,7 @@ public class Parser
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
             var node=new NumberNode(_currentToken);
+            NextToken();
             return node;    
         }
         else

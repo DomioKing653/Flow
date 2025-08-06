@@ -20,10 +20,12 @@ static class Run
                 List<Token> tokens = lexer.Tokenize();
                 Parser parser = new Parser(tokens);
                 Console.WriteLine('\n');
-                Console.WriteLine(parser.Parse().ToString());
-                Node ast = parser.Parse();
-
-
+                Node AST=parser.Parse();
+                Console.WriteLine(AST.ToString());
+                Interpreter interpreter=new Interpreter();
+                double result=interpreter.Visit(AST);
+                Console.WriteLine(result);
+                
                 Main(null);
             }
         }
