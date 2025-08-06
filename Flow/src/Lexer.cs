@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace Flow;
+﻿namespace Flow;
 
 /*
  * Errors
@@ -34,12 +32,12 @@ public static class TokenType
 public class Token(string type, string? value)
 {
     public readonly string Type = type;
-    public readonly string? Value=value;
+    private readonly string? _value=value;
     public override string ToString()
     {
-        if (Value != null)
+        if (_value != null)
         {
-            return $"{Type} -> {Value}";
+            return $"{Type} -> {_value}";
         }
         else
         {
