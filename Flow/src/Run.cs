@@ -22,7 +22,8 @@ static class Run
                 Console.WriteLine('\n');
                 Console.WriteLine(parser.Parse().ToString());
                 Node ast = parser.Parse();
-            
+
+
                 Main(null);
             }
         }

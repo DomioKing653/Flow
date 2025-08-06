@@ -102,7 +102,6 @@ public class Parser
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
             var node=new NumberNode(_currentToken);
-            NextToken();
             return node;    
         }
         else
@@ -114,28 +113,34 @@ public class Parser
 
     Node Term()
     {
-        string[] ops = [TokenType.TtMul, TokenType.TtDiv];
+        string[] ops = { TokenType.TtPlus, TokenType.TtMinus };
         Node left = Factor();
+
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {
             Token? opToken = _currentToken;
-            NextToken();
+            NextToken();         
             Node right = Factor();
             left = new BinaryOpNode(left, opToken, right);
+            NextToken();
         }
+
         return left;
     }
     Node Expr()
     {
-        string[] ops = [TokenType.TtPlus, TokenType.TtMinus];
+        string[] ops = { TokenType.TtPlus, TokenType.TtMinus };
         Node left = Term();
+
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {
             Token? opToken = _currentToken;
-            NextToken();
+            NextToken();         
             Node right = Term();
             left = new BinaryOpNode(left, opToken, right);
+            NextToken();
         }
+
         return left;
     }
 }
