@@ -1,7 +1,19 @@
 ﻿namespace Flow;
 
+public class Variable : Node
+{
+    public double Value { get; }
+    public string Identifier { get; }
+
+    public Variable(string identifier, double value)
+    {
+        Value = value;
+        Identifier = identifier;
+    }
+}
 public class Interpreter
 {
+    public List<Variable> Variables = new List<Variable>();
     public double Interpret(Node node)
     {
         if (node is NumberNode numNode)
@@ -12,10 +24,19 @@ public class Interpreter
         {
             return VisitBinaryOp(binNode);
         }
-
+        else if (node is VariableNode varNode)
+        {
+            CreateVar(varNode);
+        }
         throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");
     }
-
+    void CreateVar(Node node)
+    {
+        if (node is VariableNode varNode)
+        {
+            Variables.Add(new Variable(varNode.Identifier.Value,Interpret(varNode.Value)));    
+        }
+    }
     double VisitNumber(Node node)
     {
         if (node is NumberNode numberNode)

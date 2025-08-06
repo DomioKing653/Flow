@@ -24,7 +24,6 @@ static class Run
                 }
                 
                 Parser parser = new Parser(tokens);
-                Console.WriteLine('\n');
                 Node ast = parser.Parse();
                 Console.WriteLine(ast.ToString());
                 Interpreter interpreter = new Interpreter();

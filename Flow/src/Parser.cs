@@ -10,10 +10,24 @@ public class SyntaxError(string expected, string details) : Exception
         return $"Syntax error: expected {expected} found:{details}";
     }
 }
-
 /*
  * Nodes
  */
+public class VariableNode:Node
+{
+    public Token Identifier{get;set;}
+    public Node Value{get;set;}
+    public VariableNode(Token identifier, Node value)
+    {
+        this.Identifier = identifier;
+        this.Value = value;
+    }
+
+    public override string ToString()
+    {
+        return $"{Identifier.Value}= {Value}";
+    }
+}
 public class Node
 {
     /*
@@ -76,8 +90,7 @@ public class Parser
 
     public Node Parse()
     {
-        Node res = Expr();
-
+        Node res = Statment();
         if (_currentToken.Type != TokenType.TtEof)
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
@@ -111,6 +124,29 @@ public class Parser
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
+    Node Statment()
+    {
+        if (_currentToken != null && _currentToken.Type == TokenType.TtVarKw)
+        {
+            NextToken();
+            if (_currentToken.Type != TokenType.TtIdentifier)
+            {
+                throw new SyntaxError("Identifier", $"But found{_currentToken}");
+                
+            }
+
+            var id = _currentToken;
+            NextToken();
+            if (_currentToken.Type != TokenType.TtEqual)
+            {
+                throw new SyntaxError("Equal",$"But found{_currentToken}");
+            }
+            NextToken();
+            Node expr = Expr();
+            return new VariableNode(id,expr);
+        }
+        return Expr();
+    }
     Node Term()
     {
         string[] ops = [TokenType.TtDiv, TokenType.TtMul];
