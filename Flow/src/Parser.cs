@@ -48,7 +48,6 @@ class BinaryOpNode(Node left, Token? opTok, Node right) : Node
         return $"({Left} {Op} {Right})";
     }
 }
-
 /*
  * Parser
  */
