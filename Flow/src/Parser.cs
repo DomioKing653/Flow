@@ -22,10 +22,9 @@ public class VariableNode:Node
         this.Identifier = identifier;
         this.Value = value;
     }
-
     public override string ToString()
     {
-        return $"{Identifier.Value}= {Value}";
+        return $"{Identifier.Value} = {Value}";
     }
 }
 public class Node
@@ -90,7 +89,7 @@ public class Parser
 
     public Node Parse()
     {
-        Node res = Statment();
+        Node res = Statement();
         if (_currentToken.Type != TokenType.TtEof)
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
@@ -124,7 +123,7 @@ public class Parser
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
-    Node Statment()
+    Node Statement()
     {
         if (_currentToken != null && _currentToken.Type == TokenType.TtVarKw)
         {

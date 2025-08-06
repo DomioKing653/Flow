@@ -18,11 +18,6 @@ static class Run
             {
                 Lexer lexer = new Lexer(code);
                 List<Token> tokens = lexer.Tokenize();
-                foreach (Token token in tokens)
-                {
-                    Console.WriteLine(token);    
-                }
-                
                 Parser parser = new Parser(tokens);
                 Node ast = parser.Parse();
                 Console.WriteLine(ast.ToString());
