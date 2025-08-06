@@ -22,16 +22,18 @@ static class Run
                 Console.WriteLine('\n');
                 Console.WriteLine(parser.Parse().ToString());
                 Node ast = parser.Parse();
-                Interpreter interpreter = new Interpreter();
-                double result=interpreter.Visit(ast);
-                Console.WriteLine(result);
+            
                 Main(null);
-            } 
+            }
         }
-        catch (Exception e)
+        catch (SyntaxError e)
         {
             Console.WriteLine(e);
             Main(null);
+        }
+        catch (Exception e)
+        {
+            
         }
     }
 }

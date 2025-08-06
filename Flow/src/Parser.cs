@@ -81,9 +81,9 @@ public class Parser
     public Node Parse()
     { 
         Node res = Expr();
-        if (_currentToken != null && _currentToken.Type == TokenType.TtEof)
+        if (_currentToken == null || _currentToken.Type != TokenType.TtEof)
         {
-            throw new SyntaxError("EOF", _currentToken.ToString());
+            throw new Exception("Expected end of input (EOF) but found extra tokens");
         }
         return res;
     }
