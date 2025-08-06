@@ -1,5 +1,4 @@
 ﻿namespace Flow;
-
 /*
  * Errors
  */
@@ -104,9 +103,7 @@ public class Lexer
         {
             _tokens.Add(new Token(TokenType.TtFLo, number));
         }
-        
     }
-
     /*
      * Creating tokens
      */
@@ -163,7 +160,6 @@ public class Lexer
 
         return _tokens;
     }
-
     /*
      * Advancing position
      */

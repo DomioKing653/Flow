@@ -114,7 +114,7 @@ public class Parser
 
     Node Term()
     {
-        string[] ops = { TokenType.TtPlus, TokenType.TtMinus };
+        string[] ops = { TokenType.TtDiv, TokenType.TtMul };
         Node left = Factor();
 
         while (_currentToken != null && ops.Contains(_currentToken.Type))

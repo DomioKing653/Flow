@@ -29,7 +29,7 @@ static class Run
                 Main(null);
             }
         }
-        catch (SyntaxError e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             Main(null);
