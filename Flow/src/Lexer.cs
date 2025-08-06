@@ -1,4 +1,5 @@
 ﻿namespace Flow;
+
 /*
  * Errors
  */
@@ -32,7 +33,8 @@ public static class TokenType
 public class Token(string type, string? value)
 {
     public readonly string Type = type;
-    public readonly string? Value=value;
+    public readonly string? Value = value;
+
     public override string ToString()
     {
         if (Value != null)
@@ -79,6 +81,7 @@ public class Lexer
                 {
                     break;
                 }
+
                 dotCount++;
                 number += _currentToken.ToString();
                 NextToken();
@@ -89,12 +92,13 @@ public class Lexer
                 NextToken();
             }
         }
-        
+
         if (dotCount == 0)
         {
             _tokens.Add(new Token(TokenType.TtInt, number));
             return;
         }
+
         if (dotCount > 1)
         {
             throw new Exception("Invalid '.'");
@@ -104,6 +108,7 @@ public class Lexer
             _tokens.Add(new Token(TokenType.TtFLo, number));
         }
     }
+
     /*
      * Creating tokens
      */
@@ -154,12 +159,13 @@ public class Lexer
 
                     break;
             }
-            
         }
+
         _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;
     }
+
     /*
      * Advancing position
      */

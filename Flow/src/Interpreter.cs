@@ -2,17 +2,17 @@
 
 public class Interpreter
 {
-
     public double Interpret(Node node)
     {
         if (node is NumberNode numNode)
         {
-           return VisitNumber(numNode);
+            return VisitNumber(numNode);
         }
         else if (node is BinaryOpNode binNode)
         {
             return VisitBinaryOp(binNode);
         }
+
         throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");
     }
 
@@ -22,6 +22,7 @@ public class Interpreter
         {
             return Convert.ToDouble(numberNode.Token?.Value);
         }
+
         throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");
     }
 

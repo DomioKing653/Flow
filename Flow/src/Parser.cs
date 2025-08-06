@@ -3,17 +3,12 @@
 /*
  * Error
  */
-public class SyntaxError(string expected,string details):Exception
+public class SyntaxError(string expected, string details) : Exception
 {
     public override string ToString()
     {
         return $"Syntax error: expected {expected} found:{details}";
     }
-}
-
-class MyClass
-{
-    
 }
 
 /*
@@ -26,14 +21,16 @@ public class Node
      * Maybe something else soon
      */
 }
+
 class NumberNode : Node
 {
-    public Token? Token{get;set;}
+    public Token? Token { get; set; }
 
     public NumberNode(Token? token)
     {
         this.Token = token;
     }
+
     public override string ToString()
     {
         return $"({Token})";
@@ -45,6 +42,7 @@ class BinaryOpNode(Node left, Token? opTok, Node right) : Node
     public readonly Node Left = left;
     public readonly Node Right = right;
     public readonly Token? Op = opTok;
+
     public override string ToString()
     {
         return $"({Left} {Op} {Right})";
@@ -94,15 +92,25 @@ public class Parser
         string[] numbs = [TokenType.TtFLo, TokenType.TtInt];
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
-            var node=new NumberNode(_currentToken);
+            var node = new NumberNode(_currentToken);
             NextToken();
-            return node;    
+            return node;
         }
-        else
+
+        else if (_currentToken != null && _currentToken.Type == TokenType.TtLParen)
         {
-            throw new SyntaxError("Float or Int", _currentToken.ToString());    
+            NextToken();
+            Node left = Expr();
+            if (_currentToken.Type != TokenType.TtRParen)
+            {
+                throw new SyntaxError("')'", $"But found{_currentToken}");
+            }
+
+            NextToken();
+            return left;
         }
-        
+
+        throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
     Node Term()
@@ -113,13 +121,14 @@ public class Parser
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {
             Token? opToken = _currentToken;
-            NextToken();         
+            NextToken();
             Node right = Factor();
             left = new BinaryOpNode(left, opToken, right);
         }
 
         return left;
     }
+
     Node Expr()
     {
         string[] ops = [TokenType.TtPlus, TokenType.TtMinus];
@@ -128,10 +137,11 @@ public class Parser
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {
             Token? opToken = _currentToken;
-            NextToken();         
+            NextToken();
             Node right = Term();
             left = new BinaryOpNode(left, opToken, right);
         }
+
         return left;
     }
 }

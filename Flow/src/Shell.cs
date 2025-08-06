@@ -13,6 +13,7 @@ static class UserInput
             Console.WriteLine("Please enter a valid input");
             Shell();
         }
+
         return _consoleInput;
     }
 }
