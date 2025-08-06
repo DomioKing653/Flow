@@ -109,7 +109,6 @@ public class Parser
             NextToken();
             return left;
         }
-
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 

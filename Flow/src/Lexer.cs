@@ -28,6 +28,10 @@ public static class TokenType
     public const string TtFLo = "FLOAT";
     public const string TtEof = "EOF";
     public const string TtEqual = "EQUAL";
+    public const string TtVarKw = "VAR";
+    public const string TtPrintKw="PRINT";
+    public const string TtIdentifier = "ID";
+    
 }
 
 public class Token(string type, string? value)
@@ -108,6 +112,33 @@ public class Lexer
             _tokens.Add(new Token(TokenType.TtFLo, number));
         }
     }
+    /*
+     * Making text token like: var, print.
+     */
+    private void MakeText()
+    {
+        string text = "";
+        while (char.IsLetter(_currentToken))
+        {
+            text += _currentToken;
+            NextToken();
+        }
+
+        switch (text)
+        {
+            case "var":
+                _tokens.Add(new Token(TokenType.TtVarKw, null));
+                break;
+            case "print":
+                _tokens.Add(new Token(TokenType.TtPrintKw, null));
+                
+                break;
+            default:
+                _tokens.Add(new Token(TokenType.TtIdentifier, text));
+                break;
+        }
+
+    }
 
     /*
      * Creating tokens
@@ -148,20 +179,27 @@ public class Lexer
                     break;
 
                 default:
-                    bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
-                    if (isNumber)
+                    bool isNumber = int.TryParse(_currentToken.ToString(), out int _); 
+                    bool isLetter = char.IsLetter(_currentToken);
+                    if (isLetter)
+                    {
+                        MakeText();
+                    }
+                    else if (isNumber)
                     {
                         MakeNumber();
+                    }
+                    else if (char.IsWhiteSpace(_currentToken))
+                    {
+                        NextToken();
                     }
                     else
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
                     }
-
                     break;
             }
         }
-
         _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;
