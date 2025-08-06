@@ -73,14 +73,7 @@ public class Parser
     void NextToken()
     {
         _tokenIdx++;
-        if (_tokenIdx < _tokens.Count)
-        {
-            _currentToken = _tokens[_tokenIdx];
-        }
-        else
-        {
-            _currentToken = new Token(TokenType.TtEof, null);
-        }
+        _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : new Token(TokenType.TtEof, null);
     }
 
 
@@ -114,7 +107,7 @@ public class Parser
 
     Node Term()
     {
-        string[] ops = { TokenType.TtDiv, TokenType.TtMul };
+        string[] ops = [TokenType.TtDiv, TokenType.TtMul];
         Node left = Factor();
 
         while (_currentToken != null && ops.Contains(_currentToken.Type))
@@ -130,7 +123,7 @@ public class Parser
     }
     Node Expr()
     {
-        string[] ops = { TokenType.TtPlus, TokenType.TtMinus };
+        string[] ops = [TokenType.TtPlus, TokenType.TtMinus];
         Node left = Term();
 
         while (_currentToken != null && ops.Contains(_currentToken.Type))
