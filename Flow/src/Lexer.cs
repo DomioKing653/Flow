@@ -3,9 +3,9 @@
 /*
  * Errors
  */
-public class Error(string name, string message)
+public class Error(string name, string message):Exception
 {
-    private string Message { get; set; } = message;
+    public override string Message { get; } = message;
     private string Name { get; set; } = name;
 
     public override string ToString()
@@ -13,7 +13,6 @@ public class Error(string name, string message)
         return $"{Name}: {Message}";
     }
 }
-
 /*
  * Tokens
  */
@@ -28,6 +27,7 @@ public static class TokenType
     public const string TtInt = "INT";
     public const string TtFLo = "FLOAT";
     public const string TtEof = "EOF";
+    public const string TtEqual = "EQUAL";
 }
 
 public class Token(string type, string? value)
@@ -101,7 +101,7 @@ public class Lexer
 
         if (dotCount > 1)
         {
-            throw new Exception("Invalid '.'");
+            throw new Error("Illegal character",_currentToken.ToString());
         }
         else
         {
@@ -142,6 +142,10 @@ public class Lexer
                     _tokens.Add(new Token(TokenType.TtDiv, null));
                     NextToken();
                     break;
+                case '=':
+                    _tokens.Add(new Token(TokenType.TtEqual, null));
+                    NextToken();
+                    break;
 
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
@@ -151,10 +155,7 @@ public class Lexer
                     }
                     else
                     {
-                        Error illegalChar = new Error("Illegal character", _currentToken.ToString());
-                        Console.WriteLine(illegalChar.ToString());
-                        Console.ReadKey();
-                        Run.Main(null);
+                        throw new Error("Illegal character", _currentToken.ToString());
                     }
 
                     break;

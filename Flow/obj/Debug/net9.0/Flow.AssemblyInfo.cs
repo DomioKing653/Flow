@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flow")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a5f72375cd8b7fa182379807be48a5270403cbe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+43a25e4086c9699dca7229d41819bc8f8a5975d7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flow")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flow")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
