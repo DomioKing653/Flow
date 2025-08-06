@@ -7,7 +7,7 @@ public class Interpreter
     {
         if (node is NumberNode numNode)
         {
-            VisitNumber(numNode);
+           return VisitNumber(numNode);
         }
         else if (node is BinaryOpNode binNode)
         {
