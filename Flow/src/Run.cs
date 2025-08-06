@@ -21,8 +21,10 @@ static class Run
                 Parser parser = new Parser(tokens);
                 Console.WriteLine('\n');
                 Console.WriteLine(parser.Parse().ToString());
-                Node result = parser.Parse();
-                Console.WriteLine(result.ToString());
+                Node ast = parser.Parse();
+                Interpreter interpreter = new Interpreter();
+                double result=interpreter.Visit(ast);
+                Console.WriteLine(result);
                 Main(null);
             } 
         }

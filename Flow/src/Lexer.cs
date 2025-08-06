@@ -27,17 +27,18 @@ public static class TokenType
     public const string TtLParen = "LPAREN";
     public const string TtInt = "INT";
     public const string TtFLo = "FLOAT";
+    public const string TtEof = "EOF";
 }
 
 public class Token(string type, string? value)
 {
     public readonly string Type = type;
-    private readonly string? _value=value;
+    public readonly string? Value=value;
     public override string ToString()
     {
-        if (_value != null)
+        if (Value != null)
         {
-            return $"{Type} -> {_value}";
+            return $"{Type} -> {Value}";
         }
         else
         {
@@ -156,7 +157,9 @@ public class Lexer
 
                     break;
             }
+            
         }
+        _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;
     }

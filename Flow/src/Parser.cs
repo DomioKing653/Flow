@@ -26,11 +26,17 @@ public class Node
      * Maybe something else soon
      */
 }
-class NumberNode(Token? token) : Node
+class NumberNode : Node
 {
+    public Token? Token{get;set;}
+
+    public NumberNode(Token? token)
+    {
+        this.Token = token;
+    }
     public override string ToString()
     {
-        return $"({token})";
+        return $"({Token})";
     }
 }
 
@@ -74,7 +80,11 @@ public class Parser
 
     public Node Parse()
     { 
-        Node res = Expr(); 
+        Node res = Expr();
+        if (_currentToken != null && _currentToken.Type == TokenType.TtEof)
+        {
+            throw new SyntaxError("EOF", _currentToken.ToString());
+        }
         return res;
     }
 
@@ -87,10 +97,6 @@ public class Parser
         }
         else
         {
-            if (_currentToken == null)
-            {
-                throw new Exception("End of file");
-            }
             throw new SyntaxError("Float or Int", _currentToken.ToString());    
         }
         
