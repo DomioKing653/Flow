@@ -39,12 +39,10 @@ public class VariableNode(Token identifier, Node value) : Node
         return $"{Identifier.Value} = {Value}";
     }
 }
-
 public class Node
 {
     /*
      * It's kinda useless just for uniting all Node classes
-     * Maybe something else soon
      */
 }
 

@@ -1,0 +1,139 @@
+# Flow – Uživatelská příručka
+
+## Obsah
+
+1. [Úvod](#úvod)
+2. [Základní syntaxe](#základní-syntaxe)
+3. [Proměnné](#proměnné)
+4. [Výrazy](#výrazy)
+5. [Výpis na obrazovku](#výpis-na-obrazovku)
+6. [Komentáře](#komentáře)
+7. [Chybové hlášky](#chybové-hlášky)
+8. [Příklady](#příklady)
+
+---
+
+## Úvod
+
+Flow je jednoduchý programovací jazyk vytvořený pro snadné psaní základních programů s podporou proměnných, aritmetiky a výpisu dat. V této příručce najdeš vše, co potřebuješ, aby ses rychle naučil psát programy ve Flow.
+
+---
+
+## Základní syntaxe
+
+- Každý příkaz **musí končit středníkem** `;`.
+- Jazyk je **case-sensitive** (rozlišuje velká a malá písmena).
+- Klíčová slova jazyka jsou:  
+  `var`, `println`.
+
+---
+
+## Proměnné
+
+Proměnné deklaruješ pomocí klíčového slova `var`. Každá proměnná musí mít přiřazenou hodnotu.
+
+### Deklarace
+
+```flow
+var jmeno_promenne = výraz;
+```
+```jmeno_promenne```: název proměnné (může obsahovat písmena, číslice a podtržítka, nesmí začínat číslem)
+
+```výraz```: hodnota, kterou chceš proměnné přiřadit — může být číslo, matematický výraz nebo hodnota jiné proměnné
+
+Příklad
+```
+var x = 10;
+var y = 20;
+var suma = x + y;
+```
+Výrazy
+Podporované operace jsou:
+
+Operátor	Význam	Příklad
++	Sčítání	a + b
+-	Odčítání	a - b
+*	Násobení	a * b
+/	Dělení	a / b
+
+Závorky
+Můžeš používat závorky ( a ) pro určení priority operací:
+
+```
+var result = (10 + 5) * 2;
+```
+
+---
+### Výpis
+Výpis na obrazovku
+Pro zobrazení hodnot použij příkaz println.
+
+Syntaxe
+```println(výraz);```
+```výraz```: může být číslo, proměnná, nebo aritmetický výraz
+
+Příklad
+```
+var x = 42;
+println(x);
+println(x + 8);
+```
+Výstupem bude: 
+42
+50
+---
+### Komentáře
+Komentáře zatím nejsou podporovány.
+
+(Doporučujeme používat externí poznámky, nebo rozšiřovat parser o komentáře.)
+
+---
+### Chybové hlášky
+```Syntax error: expected ... found ...``` — znamená, že ve zdrojovém kódu je nějaká nesprávná syntaxe (např. chybí středník nebo špatně napsaný příkaz)
+
+```Invalid value in variable assignment.``` — přiřazuješ proměnné něco, co není číslo nebo výraz, který program neumí vyhodnotit
+
+```Division by zero``` — pokus o dělení nulou
+
+Jiná chybová hláška ti přesně řekne, co je špatně — vždy pečlivě kontroluj, kde jsi v kódu udělal chybu.
+
+## Kompletní příklady
+#### Příklad 1 – základní aritmetika a výpis
+```
+var a = 5;
+var b = 3;
+var c = a * (b + 2);
+println(c);
+```
+Výstup:
+
+25
+#### Příklad 2 – více proměnných a součet
+```
+var x = 10;
+var y = 7;
+var sum = x + y;
+println(sum);
+```
+Výstup:
+
+
+17
+#### Příklad 3 – chybný kód (chybná syntaxe)
+```
+var x = 10
+println(x);
+```
+Chyba:
+
+```Syntax error: expected Semicolon found:EOF```
+Tipy pro psaní kódu
+Vždy piš středník ; na konec každého příkazu.
+
+Proměnné deklaruj pomocí var před použitím.
+
+Používej závorky pro jasnou prioritu výpočtů.
+
+Výrazy mohou obsahovat pouze podporované operátory +, -, *, /.
+
+Pokud chceš zobrazit výsledek, použij println() s příslušným výrazem uvnitř závorek.
