@@ -137,7 +137,7 @@ public class Lexer
             case "var":
                 _tokens.Add(new Token(TokenType.TtVarKw, null));
                 break;
-            case "print":
+            case "println":
                 _tokens.Add(new Token(TokenType.TtPrintKw, null));
                 
                 break;

@@ -13,6 +13,10 @@ public class SyntaxError(string expected, string details) : Exception
 /*
  * Nodes
  */
+public class PrintNode(Token? token) : Node
+{
+    public Token? Token { get; set; } = token;
+}
 public class VariableNode:Node
 {
     public Token Identifier{get;set;}
@@ -142,10 +146,7 @@ public class Parser
             }
             NextToken();
             Node expr = Expr();
-            if (_currentToken.Type!=TokenType.TtSemicolon)
-            {
-                throw new SyntaxError("Semicolon", $"But found{_currentToken}");
-            }
+            SemiChech(_currentToken);
             NextToken();
             return new VariableNode(id,expr);
         }else if(_currentToken != null && _currentToken.Type == TokenType.TtPrintKw){
@@ -155,10 +156,19 @@ public class Parser
                 throw new SyntaxError("(", $"But found{_currentToken}");
             }
             NextToken();
-            if (_currentToken.Type != TokenType.TtVarKw)
+            if (_currentToken.Type != TokenType.TtIdentifier)
             {
-                
+                throw new SyntaxError("Identifier", $"But found{_currentToken}");
             }
+            string content = _currentToken.Value;
+            NextToken();
+            if (_currentToken.Type!=TokenType.TtRParen)
+            {
+                throw new SyntaxError("Parenthesis", $"But found{_currentToken}");
+            }
+            NextToken();
+            SemiChech(_currentToken);
+            
         }
         return Expr();
     }
@@ -178,6 +188,14 @@ public class Parser
         return left;
     }
 
+    void SemiChech(Token token)
+    {
+        if (token.Type != TokenType.TtSemicolon)
+        {
+            throw new SyntaxError("Semicolon", $"But found{token}");
+        }
+        NextToken();
+    }
     Node Expr()
     {
         string[] ops = [TokenType.TtPlus, TokenType.TtMinus];

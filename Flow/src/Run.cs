@@ -20,9 +20,8 @@ static class Run
                 List<Token> tokens = lexer.Tokenize();
                 Parser parser = new Parser(tokens);
                 Node ast = parser.Parse();
-                Console.WriteLine(ast.ToString());
                 Interpreter interpreter = new Interpreter();
-                double result = interpreter.Interpret(ast);
+                Output result = interpreter.Interpret(ast);
                 Console.WriteLine(result);
                 Main(null);
             }
