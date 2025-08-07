@@ -13,28 +13,29 @@ public class Variable : Node
 }
 public class Interpreter
 {
-    public List<Variable> Variables = new List<Variable>();
+    private readonly List<Variable> _variables = new List<Variable>();
     public double Interpret(Node node)
     {
         if (node is NumberNode numNode)
         {
             return VisitNumber(numNode);
         }
-        else if (node is BinaryOpNode binNode)
+        if (node is BinaryOpNode binNode)
         {
             return VisitBinaryOp(binNode);
         }
-        else if (node is VariableNode varNode)
+        if (node is VariableNode varNode)
         {
             CreateVar(varNode);
         }
-        throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");
+        throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");    
+       
     }
     void CreateVar(Node node)
     {
         if (node is VariableNode varNode)
         {
-            Variables.Add(new Variable(varNode.Identifier.Value,Interpret(varNode.Value)));    
+            _variables.Add(new Variable(varNode.Identifier.Value,Interpret(varNode.Value)));    
         }
     }
     double VisitNumber(Node node)

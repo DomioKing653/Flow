@@ -24,7 +24,6 @@ static class Run
                 Interpreter interpreter = new Interpreter();
                 double result = interpreter.Interpret(ast);
                 Console.WriteLine(result);
-
                 Main(null);
             }
         }

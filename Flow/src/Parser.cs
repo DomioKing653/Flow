@@ -142,7 +142,23 @@ public class Parser
             }
             NextToken();
             Node expr = Expr();
+            if (_currentToken.Type!=TokenType.TtSemicolon)
+            {
+                throw new SyntaxError("Semicolon", $"But found{_currentToken}");
+            }
+            NextToken();
             return new VariableNode(id,expr);
+        }else if(_currentToken != null && _currentToken.Type == TokenType.TtPrintKw){
+            NextToken();
+            if (_currentToken.Type != TokenType.TtLParen)
+            {
+                throw new SyntaxError("(", $"But found{_currentToken}");
+            }
+            NextToken();
+            if (_currentToken.Type != TokenType.TtVarKw)
+            {
+                
+            }
         }
         return Expr();
     }
@@ -174,7 +190,6 @@ public class Parser
             Node right = Term();
             left = new BinaryOpNode(left, opToken, right);
         }
-
         return left;
     }
 }

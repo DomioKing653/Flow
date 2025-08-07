@@ -18,6 +18,16 @@ public class Error(string name, string message):Exception
  */
 public static class TokenType
 {
+    /*
+     * Keywords
+     */
+    public const string TtVarKw = "VAR";
+    public const string TtPrintKw="PRINT";
+    public const string TtIdentifier = "ID";
+    public const string TtSemicolon = "SEMICOLON";
+    /*
+     * Math op.
+     */
     public const string TtPlus = "PLUS";
     public const string TtMinus = "MINUS";
     public const string TtMul = "MULTIPLY";
@@ -28,9 +38,7 @@ public static class TokenType
     public const string TtFLo = "FLOAT";
     public const string TtEof = "EOF";
     public const string TtEqual = "EQUAL";
-    public const string TtVarKw = "VAR";
-    public const string TtPrintKw="PRINT";
-    public const string TtIdentifier = "ID";
+    
     
 }
 
@@ -177,7 +185,10 @@ public class Lexer
                     _tokens.Add(new Token(TokenType.TtEqual, null));
                     NextToken();
                     break;
-
+                case ';':
+                    _tokens.Add(new Token(TokenType.TtSemicolon, null));
+                    NextToken();
+                    break;
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _); 
                     bool isLetter = char.IsLetter(_currentToken);
