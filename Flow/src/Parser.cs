@@ -10,13 +10,26 @@ public class SyntaxError(string expected, string details) : Exception
         return $"Syntax error: expected {expected} found:{details}";
     }
 }
+
+
 /*
  * Nodes
  */
-public class PrintNode(Token? token) : Node
+class PrintNode(Node expression) : Node
 {
-    public Token? Token { get; set; } = token;
+    public Node Expression { get; } = expression;
 }
+
+public class VariableAccessNode(Token identifier) : Node
+{
+    public Token Identifier { get; } = identifier;
+
+    public override string ToString()
+    {
+        return Identifier.Value;
+    }
+}
+
 public class VariableNode:Node
 {
     public Token Identifier{get;set;}
@@ -53,7 +66,6 @@ class NumberNode : Node
         return $"({Token})";
     }
 }
-
 class BinaryOpNode(Node left, Token? opTok, Node right) : Node
 {
     public readonly Node Left = left;
@@ -80,7 +92,6 @@ public class Parser
         _tokenIdx = -1;
         NextToken();
     }
-
     /*
      * Advancing token idx
      */
@@ -124,6 +135,13 @@ public class Parser
             NextToken();
             return left;
         }
+
+        if (_currentToken.Type == TokenType.TtIdentifier)
+        {
+            var node = new VariableAccessNode(_currentToken);
+            NextToken();
+            return node;
+        }
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
@@ -146,7 +164,7 @@ public class Parser
             }
             NextToken();
             Node expr = Expr();
-            SemiChech(_currentToken);
+            SemiCheck(_currentToken);
             NextToken();
             return new VariableNode(id,expr);
         }else if(_currentToken != null && _currentToken.Type == TokenType.TtPrintKw){
@@ -156,19 +174,15 @@ public class Parser
                 throw new SyntaxError("(", $"But found{_currentToken}");
             }
             NextToken();
-            if (_currentToken.Type != TokenType.TtIdentifier)
-            {
-                throw new SyntaxError("Identifier", $"But found{_currentToken}");
-            }
-            string content = _currentToken.Value;
+            var expr = Expr();
             NextToken();
             if (_currentToken.Type!=TokenType.TtRParen)
             {
                 throw new SyntaxError("Parenthesis", $"But found{_currentToken}");
             }
             NextToken();
-            SemiChech(_currentToken);
-            
+            SemiCheck(_currentToken);
+            return new PrintNode(expr);
         }
         return Expr();
     }
@@ -188,7 +202,7 @@ public class Parser
         return left;
     }
 
-    void SemiChech(Token token)
+    void SemiCheck(Token token)
     {
         if (token.Type != TokenType.TtSemicolon)
         {
@@ -200,7 +214,6 @@ public class Parser
     {
         string[] ops = [TokenType.TtPlus, TokenType.TtMinus];
         Node left = Term();
-
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {
             Token? opToken = _currentToken;
