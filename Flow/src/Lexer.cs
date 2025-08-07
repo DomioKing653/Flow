@@ -3,7 +3,7 @@
 /*
  * Errors
  */
-public class Error(string name, string message):Exception
+public class Error(string name, string message) : Exception
 {
     public override string Message { get; } = message;
     private string Name { get; set; } = name;
@@ -13,6 +13,7 @@ public class Error(string name, string message):Exception
         return $"{Name}: {Message}";
     }
 }
+
 /*
  * Tokens
  */
@@ -22,9 +23,11 @@ public static class TokenType
      * Keywords
      */
     public const string TtVarKw = "VAR";
-    public const string TtPrintKw="PRINT";
+    public const string TtPrintKw = "PRINT";
     public const string TtIdentifier = "ID";
+
     public const string TtSemicolon = "SEMICOLON";
+
     /*
      * Math op.
      */
@@ -38,8 +41,6 @@ public static class TokenType
     public const string TtFLo = "FLOAT";
     public const string TtEof = "EOF";
     public const string TtEqual = "EQUAL";
-    
-    
 }
 
 public class Token(string type, string? value)
@@ -113,13 +114,14 @@ public class Lexer
 
         if (dotCount > 1)
         {
-            throw new Error("Illegal character",_currentToken.ToString());
+            throw new Error("Illegal character", _currentToken.ToString());
         }
         else
         {
             _tokens.Add(new Token(TokenType.TtFLo, number));
         }
     }
+
     /*
      * Making text token like: var, print.
      */
@@ -139,13 +141,12 @@ public class Lexer
                 break;
             case "println":
                 _tokens.Add(new Token(TokenType.TtPrintKw, null));
-                
+
                 break;
             default:
                 _tokens.Add(new Token(TokenType.TtIdentifier, text));
                 break;
         }
-
     }
 
     /*
@@ -190,7 +191,7 @@ public class Lexer
                     NextToken();
                     break;
                 default:
-                    bool isNumber = int.TryParse(_currentToken.ToString(), out int _); 
+                    bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
                     if (isLetter)
                     {
@@ -208,9 +209,11 @@ public class Lexer
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
                     }
+
                     break;
             }
         }
+
         _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;

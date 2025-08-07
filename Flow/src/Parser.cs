@@ -11,7 +11,6 @@ public class SyntaxError(string expected, string details) : Exception
     }
 }
 
-
 /*
  * Nodes
  */
@@ -30,20 +29,17 @@ public class VariableAccessNode(Token identifier) : Node
     }
 }
 
-public class VariableNode:Node
+public class VariableNode(Token identifier, Node value) : Node
 {
-    public Token Identifier{get;set;}
-    public Node Value{get;set;}
-    public VariableNode(Token identifier, Node value)
-    {
-        this.Identifier = identifier;
-        this.Value = value;
-    }
+    public Token Identifier { get; set; } = identifier;
+    public Node Value { get; set; } = value;
+
     public override string ToString()
     {
         return $"{Identifier.Value} = {Value}";
     }
 }
+
 public class Node
 {
     /*
@@ -52,20 +48,16 @@ public class Node
      */
 }
 
-class NumberNode : Node
+class NumberNode(Token? token) : Node
 {
-    public Token? Token { get; set; }
-
-    public NumberNode(Token? token)
-    {
-        this.Token = token;
-    }
+    public Token? Token { get; set; } = token;
 
     public override string ToString()
     {
         return $"({Token})";
     }
 }
+
 class BinaryOpNode(Node left, Token? opTok, Node right) : Node
 {
     public readonly Node Left = left;
@@ -77,6 +69,7 @@ class BinaryOpNode(Node left, Token? opTok, Node right) : Node
         return $"({Left} {Op} {Right})";
     }
 }
+
 /*
  * Parser
  */
@@ -92,6 +85,7 @@ public class Parser
         _tokenIdx = -1;
         NextToken();
     }
+
     /*
      * Advancing token idx
      */
@@ -123,7 +117,7 @@ public class Parser
             return node;
         }
 
-        else if (_currentToken != null && _currentToken.Type == TokenType.TtLParen)
+        else if (_currentToken is { Type: TokenType.TtLParen })
         {
             NextToken();
             Node left = Expr();
@@ -136,56 +130,62 @@ public class Parser
             return left;
         }
 
-        if (_currentToken.Type == TokenType.TtIdentifier)
+        if (_currentToken is { Type: TokenType.TtIdentifier })
         {
             var node = new VariableAccessNode(_currentToken);
             NextToken();
             return node;
         }
+
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
     Node Statement()
     {
-        if (_currentToken != null && _currentToken.Type == TokenType.TtVarKw)
+        if (_currentToken is { Type: TokenType.TtVarKw })
         {
             NextToken();
             if (_currentToken.Type != TokenType.TtIdentifier)
             {
                 throw new SyntaxError("Identifier", $"But found{_currentToken}");
-                
             }
 
             var id = _currentToken;
             NextToken();
             if (_currentToken.Type != TokenType.TtEqual)
             {
-                throw new SyntaxError("Equal",$"But found{_currentToken}");
+                throw new SyntaxError("Equal", $"But found{_currentToken}");
             }
+
             NextToken();
             Node expr = Expr();
             SemiCheck(_currentToken);
             NextToken();
-            return new VariableNode(id,expr);
-        }else if(_currentToken != null && _currentToken.Type == TokenType.TtPrintKw){
+            return new VariableNode(id, expr);
+        }
+        else if (_currentToken is { Type: TokenType.TtPrintKw })
+        {
             NextToken();
             if (_currentToken.Type != TokenType.TtLParen)
             {
                 throw new SyntaxError("(", $"But found{_currentToken}");
             }
+
             NextToken();
             var expr = Expr();
-            NextToken();
-            if (_currentToken.Type!=TokenType.TtRParen)
+            if (_currentToken.Type != TokenType.TtRParen)
             {
                 throw new SyntaxError("Parenthesis", $"But found{_currentToken}");
             }
+
             NextToken();
             SemiCheck(_currentToken);
             return new PrintNode(expr);
         }
+
         return Expr();
     }
+
     Node Term()
     {
         string[] ops = [TokenType.TtDiv, TokenType.TtMul];
@@ -208,8 +208,10 @@ public class Parser
         {
             throw new SyntaxError("Semicolon", $"But found{token}");
         }
+
         NextToken();
     }
+
     Node Expr()
     {
         string[] ops = [TokenType.TtPlus, TokenType.TtMinus];
@@ -221,6 +223,7 @@ public class Parser
             Node right = Term();
             left = new BinaryOpNode(left, opToken, right);
         }
+
         return left;
     }
 }
