@@ -14,14 +14,42 @@ public class SyntaxError(string expected, string details) : Exception
 /*
  * Nodes
  */
-class VariableSetNode(string id,Node Value) : Node
+public abstract class Node
+{
+    /*
+     * It's kinda useless just for uniting all Node classes
+     */
+    public abstract Output VisitNode();
+    
+}
+public class ProgramNode : Node
+{
+    private List<Node> programNodes { get; }=new List<Node>();
+    public override Output VisitNode()
+    {
+        throw new NotImplementedException();
+    }
+}
+class VariableSetNode(string id, Node Value) : Node
 {
     public string Identifier { get; } = id;
     public Node Value { get; } = Value;
+    public override Output VisitNode()
+    {
+        throw new NotImplementedException();
+    }
 }
+
 class PrintNode(Node expression) : Node
 {
     public Node Expression { get; } = expression;
+
+    public override Output VisitNode()
+    {
+        var value = Expression.VisitNode();
+        Console.WriteLine(value);
+        return new Output();
+    }
 }
 
 public class VariableAccessNode(Token identifier) : Node
@@ -31,6 +59,17 @@ public class VariableAccessNode(Token identifier) : Node
     public override string ToString()
     {
         return Identifier.Value;
+    }
+
+    public override Output VisitNode()
+    {
+        var variable = VariableManagement.Variables.FirstOrDefault(v => v.Identifier == Identifier.Value);
+        if (variable is null)
+        {
+            throw new OutputError($"Variable {Identifier.Value} not found");
+        }
+
+        return new NumbOutput(variable.Value);
     }
 }
 
@@ -43,14 +82,13 @@ public class VariableNode(Token identifier, Node value) : Node
     {
         return $"{Identifier.Value} = {Value}";
     }
-}
-public class Node
-{
-    /*
-     * It's kinda useless just for uniting all Node classes
-     */
-}
 
+    public override Output VisitNode()
+    {
+        return VariableManagement.AddVariable(this);
+
+    }
+}
 class NumberNode(Token? token) : Node
 {
     public Token? Token { get; set; } = token;
@@ -58,6 +96,11 @@ class NumberNode(Token? token) : Node
     public override string ToString()
     {
         return $"({Token})";
+    }
+
+    public override Output VisitNode()
+    {
+        return new NumbOutput(float.Parse(Token?.Value));
     }
 }
 
@@ -71,6 +114,33 @@ class BinaryOpNode(Node left, Token? opTok, Node right) : Node
     {
         return $"({Left} {Op} {Right})";
     }
+
+    public override Output VisitNode()
+    {
+        Output left = Left.VisitNode();
+        Output right = Left.VisitNode();
+        if (left is NumbOutput leftOutput && right is NumbOutput rightOutput)
+        {
+            switch (Op?.Type)
+            {
+                case TokenType.TtPlus:
+                    return new NumbOutput(leftOutput.Value + rightOutput.Value);
+                case TokenType.TtMinus:
+                    return new NumbOutput(leftOutput.Value - rightOutput.Value);
+                case TokenType.TtMul:
+                    return new NumbOutput(leftOutput.Value * rightOutput.Value);
+                case TokenType.TtDiv:
+                    return rightOutput.Value != 0
+                        ? new NumbOutput(leftOutput.Value / rightOutput.Value)
+                        : throw new Exception("Division by zero");
+                default:
+                    throw new Exception($"Unknown operator: {Op?.Type}");
+            }
+        }
+
+        throw new OutputError($"VisitNode {GetType()} not implemented");
+    }
+    
 }
 
 /*
@@ -143,66 +213,69 @@ public class Parser
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
+    void Rrogram()
+    {
+        
+    }
     Node Statement()
     {
-        if (_currentToken is { Type: TokenType.TtVarKw })
+        switch (_currentToken.Type)
         {
-            NextToken();
-            if (_currentToken.Type != TokenType.TtIdentifier)
-            {
-                throw new SyntaxError("Identifier", $"{_currentToken}");
-            }
+            case TokenType.TtVarKw:
+                NextToken();
+                if (_currentToken.Type != TokenType.TtIdentifier)
+                {
+                    throw new SyntaxError("Identifier", $"{_currentToken}");
+                }
 
-            var id = _currentToken;
-            NextToken();
-            if (_currentToken.Type != TokenType.TtEqual)
-            {
-                throw new SyntaxError("Equal", $"{_currentToken}");
-            }
+                var id = _currentToken;
+                NextToken();
+                if (_currentToken.Type != TokenType.TtEqual)
+                {
+                    throw new SyntaxError("Equal", $"{_currentToken}");
+                }
 
-            NextToken();
-            Node expr = Expr();
-            SemiCheck(_currentToken);
-            NextToken();
-            return new VariableNode(id, expr);
+                NextToken();
+                Node expr = Expr();
+                SemiCheck(_currentToken);
+                NextToken();
+                return new VariableNode(id, expr);
+                break;
+            case TokenType.TtPrintKw:
+                NextToken();
+                if (_currentToken.Type != TokenType.TtLParen)
+                {
+                    throw new SyntaxError("(", $"{_currentToken}");
+                }
+                NextToken();
+                var expr2 = Expr();
+                if (_currentToken.Type != TokenType.TtRParen)
+                {
+                    throw new SyntaxError("Parenthesis", $"{_currentToken}");
+                }
+                NextToken();
+                SemiCheck(_currentToken);
+                return new PrintNode(expr2);
+                break;
+            case TokenType.TtIdentifier:
+                string id2 = _currentToken.Value;
+                NextToken();
+                if (_currentToken.Type != TokenType.TtEqual)
+                {
+                    throw new SyntaxError("Equal", $"{_currentToken}");
+                }
+                NextToken();
+                Node expr3 = Expr();
+                NextToken();
+                SemiCheck(_currentToken);
+                return new VariableSetNode(id2, expr3);
+                break;
+                
         }
-        else if (_currentToken is { Type: TokenType.TtPrintKw })
-        {
-            NextToken();
-            if (_currentToken.Type != TokenType.TtLParen)
-            {
-                throw new SyntaxError("(", $"{_currentToken}");
-            }
 
-            NextToken();
-            var expr = Expr();
-            if (_currentToken.Type != TokenType.TtRParen)
-            {
-                throw new SyntaxError("Parenthesis", $"{_currentToken}");
-            }
-
-            NextToken();
-            SemiCheck(_currentToken);
-            return new PrintNode(expr);
-        }
-        else if(_currentToken.Type !=TokenType.TtIdentifier)
-        {
-            string id = _currentToken.Value;
-            NextToken();
-            if (_currentToken.Type != TokenType.TtEqual)
-            {
-                throw new SyntaxError("Equal", $"{_currentToken}");
-            }
-            NextToken();
-            Node expr = Expr();
-            NextToken();
-            SemiCheck(_currentToken);
-            return new VariableSetNode(id,expr);
-            
-        }
+        
 
         throw new SyntaxError("Statement", $"{_currentToken}");
-
     }
 
     Node Term()

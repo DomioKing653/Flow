@@ -12,17 +12,23 @@ static class Run
             string? code = UserInput.Shell();
             if (code == "exit")
             {
-                Environment.Exit(2);
+                Environment.Exit(100);
             }
-            else
+            else if(code=="f"||code=="F")
             {
-                Lexer lexer = new Lexer(code);
+                string? input = File.ReadAllText("C:\\Users\\simon\\RiderProjects\\Flow\\Flow\\pl\\Test.txt");
+
+                Lexer lexer = new Lexer(input);
                 List<Token> tokens = lexer.Tokenize();
                 Parser parser = new Parser(tokens);
                 Node ast = parser.Parse();
                 Interpreter interpreter = new Interpreter();
                 interpreter.Interpret(ast);
                 Main(null);
+            }
+            else
+            {
+                
             }
         }
         catch (Exception e)

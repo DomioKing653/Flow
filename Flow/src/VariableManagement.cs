@@ -16,9 +16,7 @@ public static class VariableManagement
     public static readonly List<Variable?> Variables = new List<Variable?>();
 
     public static Output AddVariable(VariableNode varNode)
-    {
-        Interpreter interpreter = new Interpreter();
-        Output output = interpreter.Interpret(varNode.Value);
+    { Output output = varNode.Value.VisitNode();
 
         if (output is NumbOutput numbOutput)
         {
