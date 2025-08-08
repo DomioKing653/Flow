@@ -213,12 +213,10 @@ public class Lexer
                     break;
             }
         }
-
         _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;
     }
-
     /*
      * Advancing position
      */

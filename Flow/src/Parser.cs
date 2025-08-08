@@ -14,6 +14,11 @@ public class SyntaxError(string expected, string details) : Exception
 /*
  * Nodes
  */
+class VariableSetNode(string id,Node Value) : Node
+{
+    public string Identifier { get; } = id;
+    public Node Value { get; } = Value;
+}
 class PrintNode(Node expression) : Node
 {
     public Node Expression { get; } = expression;
@@ -180,8 +185,24 @@ public class Parser
             SemiCheck(_currentToken);
             return new PrintNode(expr);
         }
+        else if(_currentToken.Type !=TokenType.TtIdentifier)
+        {
+            string id = _currentToken.Value;
+            NextToken();
+            if (_currentToken.Type != TokenType.TtEqual)
+            {
+                throw new SyntaxError("Equal", $"{_currentToken}");
+            }
+            NextToken();
+            Node expr = Expr();
+            NextToken();
+            SemiCheck(_currentToken);
+            return new VariableSetNode(id,expr);
+            
+        }
 
-        return Expr();
+        throw new SyntaxError("Statement", $"{_currentToken}");
+
     }
 
     Node Term()

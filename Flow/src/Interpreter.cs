@@ -21,19 +21,14 @@ public class Output
      * Doesn't do anything, just uniting things
      */
 }
-
 public class NumbOutput(float value) : Output
 {
     public readonly float Value = value;
-
     public override string ToString()
     {
         return Value.ToString(CultureInfo.CurrentCulture);
     }
 }
-
-
-
 public class Interpreter
 {
     
@@ -62,10 +57,18 @@ public class Interpreter
             Console.WriteLine(value);
             return new Output();
         }
-
+        else if (node is VariableAccessNode varSetNode)
+        {
+            
+        }
         throw new OutputError($"VisitNode {node.GetType()} not implemented");
     }
 
+    Output SetVar(VariableSetNode node)
+    {
+        
+        return new Output();
+    }
     Output CreateVar(VariableNode varNode)
     {
         return VariableManagement.AddVariable(varNode);
