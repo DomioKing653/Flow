@@ -22,9 +22,9 @@ public class Output
      */
 }
 
-public class NumbOutput(double value) : Output
+public class NumbOutput(float value) : Output
 {
-    public readonly double Value = value;
+    public readonly float Value = value;
 
     public override string ToString()
     {
@@ -32,20 +32,11 @@ public class NumbOutput(double value) : Output
     }
 }
 
-public class Variable(string identifier, double value) : Output
-{
-    public double Value { get; } = value;
-    public string Identifier { get; } = identifier;
 
-    public override string ToString()
-    {
-        return $"{Identifier} = {Value}";
-    }
-}
 
 public class Interpreter
 {
-    private readonly List<Variable> _variables = new List<Variable>();
+    
 
     public Output Interpret(Node node)
     {
@@ -77,37 +68,25 @@ public class Interpreter
 
     Output CreateVar(VariableNode varNode)
     {
-        Output output = Interpret(varNode.Value);
-
-        if (output is NumbOutput numbOutput)
-        {
-            if (varNode.Identifier.Value != null)
-            {
-                var variable = new Variable(varNode.Identifier.Value, numbOutput.Value);
-                _variables.Add(variable);
-                return new Output();
-            }
-        }
-
-        throw new Exception("Invalid value in variable assignment.");
+        return VariableManagement.AddVariable(varNode);
     }
 
     NumbOutput VisitNumber(Node node)
     {
         if (node is NumberNode numberNode)
         {
-            return new NumbOutput(Convert.ToDouble(numberNode.Token?.Value));
+            return new NumbOutput(float.Parse(numberNode.Token?.Value, CultureInfo.InvariantCulture.NumberFormat));
         }
 
-        throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");
+        throw new OutputError($"VisitNode {node.GetType()} not implemented");
     }
 
     Output VisitAccessNode(VariableAccessNode node)
     {
-        var variable = _variables.FirstOrDefault(v => v.Identifier == node.Identifier.Value);
+        var variable = VariableManagement.Variables.FirstOrDefault(v => v.Identifier == node.Identifier.Value);
         if (variable is null)
         {
-            throw new Exception($"Variable {node.Identifier.Value} not found");
+            throw new OutputError($"Variable {node.Identifier.Value} not found");
         }
 
         return new NumbOutput(variable.Value);
@@ -136,6 +115,6 @@ public class Interpreter
             }
         }
 
-        throw new NotImplementedException($"VisitNode {node.GetType()} not implemented");
+        throw new OutputError($"VisitNode {node.GetType()} not implemented");
     }
 }

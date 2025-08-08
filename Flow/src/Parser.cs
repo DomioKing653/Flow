@@ -121,7 +121,7 @@ public class Parser
             Node left = Expr();
             if (_currentToken.Type != TokenType.TtRParen)
             {
-                throw new SyntaxError("')'", $"But found{_currentToken}");
+                throw new SyntaxError("')'", $"{_currentToken}");
             }
 
             NextToken();
@@ -145,14 +145,14 @@ public class Parser
             NextToken();
             if (_currentToken.Type != TokenType.TtIdentifier)
             {
-                throw new SyntaxError("Identifier", $"But found{_currentToken}");
+                throw new SyntaxError("Identifier", $"{_currentToken}");
             }
 
             var id = _currentToken;
             NextToken();
             if (_currentToken.Type != TokenType.TtEqual)
             {
-                throw new SyntaxError("Equal", $"But found{_currentToken}");
+                throw new SyntaxError("Equal", $"{_currentToken}");
             }
 
             NextToken();
@@ -166,14 +166,14 @@ public class Parser
             NextToken();
             if (_currentToken.Type != TokenType.TtLParen)
             {
-                throw new SyntaxError("(", $"But found{_currentToken}");
+                throw new SyntaxError("(", $"{_currentToken}");
             }
 
             NextToken();
             var expr = Expr();
             if (_currentToken.Type != TokenType.TtRParen)
             {
-                throw new SyntaxError("Parenthesis", $"But found{_currentToken}");
+                throw new SyntaxError("Parenthesis", $"{_currentToken}");
             }
 
             NextToken();
@@ -204,7 +204,7 @@ public class Parser
     {
         if (token.Type != TokenType.TtSemicolon)
         {
-            throw new SyntaxError("Semicolon", $"But found{token}");
+            throw new SyntaxError("Semicolon", $"{token}");
         }
 
         NextToken();
