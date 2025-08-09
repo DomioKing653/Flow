@@ -1,4 +1,2 @@
-﻿var x = 10.5;
-var y = 3;
-var solution = x + y;
-println(solution);
+﻿var x = 50;
+println(x);

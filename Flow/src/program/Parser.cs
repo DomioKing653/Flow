@@ -1,4 +1,8 @@
-﻿namespace Flow;
+﻿using Flow.classes;
+using Flow.classes.Nodes;
+using Flow.Nodes;
+
+namespace Flow;
 
 /*
  * Error
@@ -16,6 +20,7 @@ public class SyntaxError(string expected, string details) : Exception
  */
 public class Parser
 {
+    ProgramNode root=new ProgramNode();
     int _tokenIdx;
     readonly List<Token> _tokens;
     Token? _currentToken;
@@ -39,15 +44,25 @@ public class Parser
 
     public Node Parse()
     {
-        Node res = Statement();
+        Node res = Program();
         if (_currentToken.Type != TokenType.TtEof)
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
         }
-
         return res;
     }
 
+    public ProgramNode Program()
+    {
+        while (true)
+        {
+            if (_currentToken.Type==TokenType.TtEof)
+            {
+                return root;
+            }
+            Statement();    
+        }
+    }
     Node Factor()
     {
         string[] numbs = [TokenType.TtFLo, TokenType.TtInt];
@@ -70,7 +85,6 @@ public class Parser
             NextToken();
             return left;
         }
-
         if (_currentToken is { Type: TokenType.TtIdentifier })
         {
             var node = new VariableAccessNode(_currentToken);
@@ -81,11 +95,8 @@ public class Parser
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
 
-    void Rrogram()
-    {
-        
-    }
-    Node Statement()
+
+    void Statement()
     {
         switch (_currentToken.Type)
         {
@@ -106,8 +117,7 @@ public class Parser
                 NextToken();
                 Node expr = Expr();
                 SemiCheck(_currentToken);
-                NextToken();
-                return new VariableNode(id, expr);
+                root.programNodes.Add(new VariableNode(id, expr)); 
                 break;
             case TokenType.TtPrintKw:
                 NextToken();
@@ -123,7 +133,7 @@ public class Parser
                 }
                 NextToken();
                 SemiCheck(_currentToken);
-                return new PrintNode(expr2);
+                root.programNodes.Add(new PrintNode(expr2));
                 break;
             case TokenType.TtIdentifier:
                 string id2 = _currentToken.Value;
@@ -136,14 +146,13 @@ public class Parser
                 Node expr3 = Expr();
                 NextToken();
                 SemiCheck(_currentToken);
-                return new VariableSetNode(id2, expr3);
+                root.programNodes.Add(new VariableSetNode(id2, expr3));
                 break;
+            default:
+                throw new SyntaxError("Statement", $"{_currentToken}");
                 
         }
-
         
-
-        throw new SyntaxError("Statement", $"{_currentToken}");
     }
 
     Node Term()

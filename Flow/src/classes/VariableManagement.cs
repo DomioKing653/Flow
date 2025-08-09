@@ -1,4 +1,6 @@
-﻿namespace Flow;
+﻿using Flow.Nodes;
+
+namespace Flow;
 
 public class Variable(string identifier, float value) : Output
 {

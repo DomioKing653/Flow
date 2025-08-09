@@ -133,7 +133,6 @@ public class Lexer
             text += _currentToken;
             NextToken();
         }
-
         switch (text)
         {
             case "var":
@@ -141,14 +140,14 @@ public class Lexer
                 break;
             case "println":
                 _tokens.Add(new Token(TokenType.TtPrintKw, null));
-
+                break;
+            case "userInput":
                 break;
             default:
                 _tokens.Add(new Token(TokenType.TtIdentifier, text));
                 break;
         }
     }
-
     /*
      * Creating tokens
      */
@@ -190,6 +189,9 @@ public class Lexer
                     _tokens.Add(new Token(TokenType.TtSemicolon, null));
                     NextToken();
                     break;
+                case '.':
+                    break;
+                    
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
@@ -209,7 +211,6 @@ public class Lexer
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
                     }
-
                     break;
             }
         }

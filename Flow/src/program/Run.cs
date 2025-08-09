@@ -1,4 +1,6 @@
-﻿namespace Flow;
+﻿using Flow.classes;
+
+namespace Flow;
 
 /*
  * Run
