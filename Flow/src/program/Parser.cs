@@ -3,7 +3,6 @@ using Flow.classes.Nodes;
 using Flow.Nodes;
 
 namespace Flow;
-
 /*
  * Error
  */
@@ -31,7 +30,6 @@ public class Parser
         _tokenIdx = -1;
         NextToken();
     }
-
     /*
      * Advancing token idx
      */
@@ -40,8 +38,6 @@ public class Parser
         _tokenIdx++;
         _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : new Token(TokenType.TtEof, null);
     }
-
-
     public Node Parse()
     {
         Node res = Program();
@@ -91,6 +87,19 @@ public class Parser
             NextToken();
             return node;
         }
+        else if (_currentToken is {Type: TokenType.TtInputFn})
+        {
+            if (_currentToken.Type != TokenType.TtLParen)
+            {
+                throw new SyntaxError("'('", $"{_currentToken}");
+            }   
+            NextToken();
+            if (_currentToken.Type != TokenType.TtRParen)
+            {
+                throw new SyntaxError("')'", $"{_currentToken}");
+            }
+            SemiCheck(_currentToken);
+        }
 
         throw new SyntaxError("Float or Int", _currentToken.ToString());
     }
@@ -113,13 +122,12 @@ public class Parser
                 {
                     throw new SyntaxError("Equal", $"{_currentToken}");
                 }
-
                 NextToken();
                 Node expr = Expr();
                 SemiCheck(_currentToken);
                 root.programNodes.Add(new VariableNode(id, expr)); 
                 break;
-            case TokenType.TtPrintKw:
+            case TokenType.TtPrintFn:
                 NextToken();
                 if (_currentToken.Type != TokenType.TtLParen)
                 {
@@ -154,7 +162,6 @@ public class Parser
         }
         
     }
-
     Node Term()
     {
         string[] ops = [TokenType.TtDiv, TokenType.TtMul];

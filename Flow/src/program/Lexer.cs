@@ -23,11 +23,16 @@ public static class TokenType
      * Keywords
      */
     public const string TtVarKw = "VAR";
-    public const string TtPrintKw = "PRINT";
+    /*
+     * FUNCTIONS
+     */
+    public const string TtPrintFn = "PRINT";
+    public const string TtInputFn = "INPUT";
+    /*
+     * Misc
+     */
     public const string TtIdentifier = "ID";
-
     public const string TtSemicolon = "SEMICOLON";
-
     /*
      * Math op.
      */
@@ -139,9 +144,10 @@ public class Lexer
                 _tokens.Add(new Token(TokenType.TtVarKw, null));
                 break;
             case "println":
-                _tokens.Add(new Token(TokenType.TtPrintKw, null));
+                _tokens.Add(new Token(TokenType.TtPrintFn, null));
                 break;
-            case "userInput":
+            case "Input":
+                _tokens.Add(new Token(TokenType.TtInputFn, null));
                 break;
             default:
                 _tokens.Add(new Token(TokenType.TtIdentifier, text));

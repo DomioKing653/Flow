@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
-
 namespace Flow.classes.Nodes;
-
+/*
+ * Number node
+ */
 class NumberNode(Token? token) : Node
 {
     private Token? Token { get; set; } = token;
@@ -10,7 +11,6 @@ class NumberNode(Token? token) : Node
     {
         return $"({Token})";
     }
-
     public override Output VisitNode()
     {
         return new NumbOutput(float.Parse(Token?.Value,CultureInfo.InvariantCulture));
