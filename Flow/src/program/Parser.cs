@@ -3,6 +3,7 @@ using Flow.classes.Nodes;
 using Flow.Nodes;
 
 namespace Flow;
+
 /*
  * Error
  */
@@ -19,7 +20,7 @@ public class SyntaxError(string expected, string details) : Exception
  */
 public class Parser
 {
-    ProgramNode root=new ProgramNode();
+    ProgramNode root = new ProgramNode();
     int _tokenIdx;
     readonly List<Token> _tokens;
     Token? _currentToken;
@@ -30,6 +31,7 @@ public class Parser
         _tokenIdx = -1;
         NextToken();
     }
+
     /*
      * Advancing token idx
      */
@@ -38,6 +40,7 @@ public class Parser
         _tokenIdx++;
         _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : new Token(TokenType.TtEof, null);
     }
+
     public Node Parse()
     {
         Node res = Program();
@@ -45,6 +48,7 @@ public class Parser
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
         }
+
         return res;
     }
 
@@ -52,13 +56,15 @@ public class Parser
     {
         while (true)
         {
-            if (_currentToken.Type==TokenType.TtEof)
+            if (_currentToken.Type == TokenType.TtEof)
             {
                 return root;
             }
-            Statement();    
+
+            Statement();
         }
     }
+
     Node Factor()
     {
         string[] numbs = [TokenType.TtFLo, TokenType.TtInt];
@@ -81,24 +87,28 @@ public class Parser
             NextToken();
             return left;
         }
+
         if (_currentToken is { Type: TokenType.TtIdentifier })
         {
             var node = new VariableAccessNode(_currentToken);
             NextToken();
             return node;
         }
-        else if (_currentToken is {Type: TokenType.TtInputFn})
+        else if (_currentToken is { Type: TokenType.TtInputFn })
         {
             if (_currentToken.Type != TokenType.TtLParen)
             {
                 throw new SyntaxError("'('", $"{_currentToken}");
-            }   
+            }
+
             NextToken();
             if (_currentToken.Type != TokenType.TtRParen)
             {
                 throw new SyntaxError("')'", $"{_currentToken}");
             }
+
             SemiCheck(_currentToken);
+            return new InputNode();
         }
 
         throw new SyntaxError("Float or Int", _currentToken.ToString());
@@ -109,7 +119,7 @@ public class Parser
     {
         switch (_currentToken.Type)
         {
-            case TokenType.TtVarKw:
+            case TokenType.TtLetKw:
                 NextToken();
                 if (_currentToken.Type != TokenType.TtIdentifier)
                 {
@@ -122,10 +132,11 @@ public class Parser
                 {
                     throw new SyntaxError("Equal", $"{_currentToken}");
                 }
+
                 NextToken();
                 Node expr = Expr();
                 SemiCheck(_currentToken);
-                root.programNodes.Add(new VariableNode(id, expr)); 
+                root.programNodes.Add(new VariableNode(id, expr));
                 break;
             case TokenType.TtPrintFn:
                 NextToken();
@@ -133,12 +144,14 @@ public class Parser
                 {
                     throw new SyntaxError("(", $"{_currentToken}");
                 }
+
                 NextToken();
                 var expr2 = Expr();
                 if (_currentToken.Type != TokenType.TtRParen)
                 {
                     throw new SyntaxError("Parenthesis", $"{_currentToken}");
                 }
+
                 NextToken();
                 SemiCheck(_currentToken);
                 root.programNodes.Add(new PrintNode(expr2));
@@ -150,6 +163,7 @@ public class Parser
                 {
                     throw new SyntaxError("Equal", $"{_currentToken}");
                 }
+
                 NextToken();
                 Node expr3 = Expr();
                 NextToken();
@@ -158,10 +172,9 @@ public class Parser
                 break;
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");
-                
         }
-        
     }
+
     Node Term()
     {
         string[] ops = [TokenType.TtDiv, TokenType.TtMul];

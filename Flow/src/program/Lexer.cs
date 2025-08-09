@@ -22,17 +22,22 @@ public static class TokenType
     /*
      * Keywords
      */
-    public const string TtVarKw = "VAR";
+    public const string TtLetKw = "LET";
+
     /*
      * FUNCTIONS
      */
     public const string TtPrintFn = "PRINT";
+
     public const string TtInputFn = "INPUT";
+
     /*
      * Misc
      */
     public const string TtIdentifier = "ID";
+
     public const string TtSemicolon = "SEMICOLON";
+
     /*
      * Math op.
      */
@@ -138,10 +143,11 @@ public class Lexer
             text += _currentToken;
             NextToken();
         }
+
         switch (text)
         {
             case "var":
-                _tokens.Add(new Token(TokenType.TtVarKw, null));
+                _tokens.Add(new Token(TokenType.TtLetKw, null));
                 break;
             case "println":
                 _tokens.Add(new Token(TokenType.TtPrintFn, null));
@@ -154,6 +160,7 @@ public class Lexer
                 break;
         }
     }
+
     /*
      * Creating tokens
      */
@@ -197,7 +204,7 @@ public class Lexer
                     break;
                 case '.':
                     break;
-                    
+
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
@@ -217,13 +224,16 @@ public class Lexer
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
                     }
+
                     break;
             }
         }
+
         _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;
     }
+
     /*
      * Advancing position
      */
