@@ -2,8 +2,18 @@
 
 namespace Flow.Nodes;
 
-class BinaryOpNode(Node left, Token? opTok, Node right) : Node
+class BinaryOpNode : Node
 {
+    public Node left;
+    public Node right;
+    public Token? opTok;
+
+    public BinaryOpNode(Node left, Token? opTok, Node right)
+    {
+        this.left = left;
+        this.right = right;
+        this.opTok = opTok;
+    }
     public override string ToString()
     {
         return $"({left} {opTok} {right})";
@@ -12,7 +22,8 @@ class BinaryOpNode(Node left, Token? opTok, Node right) : Node
     public override Output VisitNode()
     {
         Output left1 = left.VisitNode();
-        Output right1 = left.VisitNode();
+        Output right1 = right.VisitNode();
+
         if (left1 is NumbOutput leftOutput && right1 is NumbOutput rightOutput)
         {
             switch (opTok?.Type)
@@ -34,5 +45,4 @@ class BinaryOpNode(Node left, Token? opTok, Node right) : Node
 
         throw new OutputError($"VisitNode {GetType()} not implemented");
     }
-    
 }

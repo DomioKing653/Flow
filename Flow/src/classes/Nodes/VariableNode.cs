@@ -15,6 +15,5 @@ public class VariableNode(Token identifier, Node value) : Node
     public override Output VisitNode()
     {
         return VariableManagement.AddVariable(this);
-
     }
 }

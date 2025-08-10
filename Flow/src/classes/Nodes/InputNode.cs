@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
 
-namespace Flow.classes.Nodes;
-
-public class InputNode:Node
-{ public override Output VisitNode()
+namespace Flow.classes.Nodes
+{
+    public class InputNode : Node
     {
-        return new NumbOutput(float.Parse(Console.ReadLine(),CultureInfo.InvariantCulture));
+        public override Output VisitNode()
+        {
+            return new NumbOutput(float.Parse(Console.ReadLine(), CultureInfo.InvariantCulture));
+        }
     }
 }

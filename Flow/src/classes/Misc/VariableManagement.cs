@@ -18,7 +18,8 @@ public static class VariableManagement
     public static readonly List<Variable?> Variables = new List<Variable?>();
 
     public static Output AddVariable(VariableNode varNode)
-    { Output output = varNode.Value.VisitNode();
+    { 
+        Output output = varNode.Value.VisitNode();
 
         if (output is NumbOutput numbOutput)
         {

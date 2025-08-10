@@ -1,18 +1,21 @@
 ﻿using System.Globalization;
-namespace Flow.classes.Nodes;
-/*
- * Number node
- */
-class NumberNode(Token? token) : Node
+namespace Flow.classes.Nodes
 {
-    private Token? Token { get; set; } = token;
+    /*
+     * Number node
+     */
+    class NumberNode(Token? token) : Node
+    {
+        private Token? Token { get; set; } = token;
 
-    public override string ToString()
-    {
-        return $"({Token})";
-    }
-    public override Output VisitNode()
-    {
-        return new NumbOutput(float.Parse(Token?.Value,CultureInfo.InvariantCulture));
+        public override string ToString()
+        {
+            return $"({Token})";
+        }
+        public override Output VisitNode()
+        {
+            string normalized = Token?.Value.Replace(',', '.');
+            return new NumbOutput(float.Parse(normalized));
+        }
     }
 }

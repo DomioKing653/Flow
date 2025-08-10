@@ -1,2 +1,4 @@
-﻿var x = userInput();
-println(x);
+﻿let x = 4;
+let y = input();
+let z = x * y;
+println(z);

@@ -3,7 +3,7 @@
 ## Obsah
 
 1. [Úvod](#úvod)
-2. [Základní syntaxe](#základní-syntaxe)
+2. [Základní syntaxe](#Základní syntaxe)
 3. [Proměnné](#proměnné)
 4. [Výrazy](#výrazy)
 5. [Výpis na obrazovku](#výpis-na-obrazovku)
@@ -79,8 +79,22 @@ println(x);
 println(x + 8);
 ```
 Výstupem bude: 
+
 42
+
 50
+
+---
+### Vstup  od uživatele
+Funkce```input()``` aktuálně vrací pouze int.
+příklad:
+```
+let i  = 50;
+let in = input();
+let solution=i*in;
+println(solution);
+```
+
 ---
 ### Komentáře
 Komentáře zatím nejsou podporovány.

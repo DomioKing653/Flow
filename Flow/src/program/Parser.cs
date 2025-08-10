@@ -1,8 +1,12 @@
-﻿using Flow.classes;
+﻿using System.Globalization;
+using Flow.classes;
 using Flow.classes.Nodes;
 using Flow.Nodes;
 
+
+
 namespace Flow;
+
 
 /*
  * Error
@@ -94,8 +98,10 @@ public class Parser
             NextToken();
             return node;
         }
-        else if (_currentToken is { Type: TokenType.TtInputFn })
+
+        if (_currentToken is { Type: TokenType.TtInputFn })
         {
+            NextToken();
             if (_currentToken.Type != TokenType.TtLParen)
             {
                 throw new SyntaxError("'('", $"{_currentToken}");
@@ -107,7 +113,7 @@ public class Parser
                 throw new SyntaxError("')'", $"{_currentToken}");
             }
 
-            SemiCheck(_currentToken);
+            NextToken();
             return new InputNode();
         }
 
@@ -144,7 +150,6 @@ public class Parser
                 {
                     throw new SyntaxError("(", $"{_currentToken}");
                 }
-
                 NextToken();
                 var expr2 = Expr();
                 if (_currentToken.Type != TokenType.TtRParen)
