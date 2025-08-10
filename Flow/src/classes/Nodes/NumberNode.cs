@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+
 namespace Flow.classes.Nodes
 {
     /*
@@ -12,10 +13,11 @@ namespace Flow.classes.Nodes
         {
             return $"({Token})";
         }
+
         public override Output VisitNode()
         {
             string normalized = Token?.Value.Replace(',', '.');
-            return new NumbOutput(float.Parse(normalized));
+            return new NumbOutput(float.Parse(normalized, CultureInfo.InvariantCulture));
         }
     }
 }

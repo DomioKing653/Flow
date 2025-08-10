@@ -30,7 +30,13 @@ static class Run
             }
             else
             {
-                
+                Lexer lexer = new Lexer(code);
+                List<Token> tokens = lexer.Tokenize();
+                Parser parser = new Parser(tokens);
+                Node ast = parser.Parse();
+                Interpreter interpreter = new Interpreter();
+                interpreter.Interpret(ast);
+                Main(null);
             }
         }
         catch (Exception e)

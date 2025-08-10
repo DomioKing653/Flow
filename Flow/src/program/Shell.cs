@@ -5,7 +5,7 @@ static class UserInput
     static string? _consoleInput;
 
     public static string? Shell()
-    {
+    {   
         Console.Write("Flow>");
         _consoleInput = Console.ReadLine();
         if (_consoleInput is { Length: 0 })

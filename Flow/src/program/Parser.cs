@@ -4,9 +4,7 @@ using Flow.classes.Nodes;
 using Flow.Nodes;
 
 
-
 namespace Flow;
-
 
 /*
  * Error
@@ -150,6 +148,7 @@ public class Parser
                 {
                     throw new SyntaxError("(", $"{_currentToken}");
                 }
+
                 NextToken();
                 var expr2 = Expr();
                 if (_currentToken.Type != TokenType.TtRParen)
