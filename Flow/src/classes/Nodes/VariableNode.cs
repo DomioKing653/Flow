@@ -4,8 +4,8 @@ namespace Flow.Nodes;
 
 public class VariableNode(Token identifier, Node value) : Node
 {
-    public Token Identifier { get; set; } = identifier;
-    public Node Value { get; set; } = value;
+    public Token Identifier { get;} = identifier;
+    public Node Value { get;} = value;
 
     public override string ToString()
     {

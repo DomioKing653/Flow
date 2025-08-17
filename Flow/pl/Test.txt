@@ -1,4 +1,0 @@
-﻿let x = 10,5;
-let y = input();
-let z = x * y;
-println(z);

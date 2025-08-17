@@ -1,0 +1,4 @@
+﻿let i = 10,5;
+let k = input();
+let solution = i * k;
+println(solution);

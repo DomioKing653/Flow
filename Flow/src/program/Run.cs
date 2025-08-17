@@ -1,4 +1,5 @@
 ﻿using Flow.classes;
+using Flow.Program;
 
 namespace Flow;
 
@@ -9,40 +10,57 @@ static class Run
 {
     public static void Main(string[]? args)
     {
-        try
+        void DoJob(string? code)
         {
-            string? code = UserInput.Shell();
-            if (code == "exit")
-            {
-                Environment.Exit(100);
-            }
-            else if(code=="f"||code=="F")
-            {
-                string? input = File.ReadAllText("C:\\Users\\simon\\RiderProjects\\Flow\\Flow\\pl\\Test.txt");
-
-                Lexer lexer = new Lexer(input);
-                List<Token> tokens = lexer.Tokenize();
-                Parser parser = new Parser(tokens);
-                Node ast = parser.Parse();
-                Interpreter interpreter = new Interpreter();
-                interpreter.Interpret(ast);
-                Main(null);
-            }
-            else
-            {
-                Lexer lexer = new Lexer(code);
-                List<Token> tokens = lexer.Tokenize();
-                Parser parser = new Parser(tokens);
-                Node ast = parser.Parse();
-                Interpreter interpreter = new Interpreter();
-                interpreter.Interpret(ast);
-                Main(null);
-            }
+            Lexer lexer = new Lexer(code);
+            List<Token> tokens = lexer.Tokenize();
+            Parser parser = new Parser(tokens);
+            Node ast = parser.Parse();
+            Interpreter interpreter = new Interpreter();
+            interpreter.Interpret(ast);
         }
-        catch (Exception e)
+
+        var exit = false;
+        while (!exit)
         {
-            Console.WriteLine(e);
-            Main(null);
+            try
+            {
+                var code = UserInput.Shell();
+                switch (code)
+                {
+                    case "exit":
+                        exit = true;
+                        break;
+                    case "f":
+                    case "F":
+                    {
+                        var fileName = @"C:\Users\simon\RiderProjects\Flow\Flow\pl\Test.txt";
+                        if (!File.Exists(fileName))
+                        {
+                            if (args is { Length: > 0 } && args[0] != "")
+                            {
+                                fileName = args[0];
+                            }
+                        }
+                        Console.WriteLine("Parsing: " + fileName);
+
+                        var input = File.ReadAllText(fileName);
+                        Console.WriteLine(input);
+
+                        DoJob(input);
+                        break;
+                    }
+                    default:
+                    {
+                        DoJob(code);
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Flow.classes.Nodes
     {
         public override Output VisitNode()
         {
+            Console.Write("Enter Input: ");
             return new NumbOutput(float.Parse(Console.ReadLine(), CultureInfo.InvariantCulture));
         }
     }

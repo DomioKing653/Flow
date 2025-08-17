@@ -4,11 +4,11 @@ namespace Flow.Nodes;
 
 public class ProgramNode : Node
 {
-    public List<Node> programNodes { get; } = new List<Node>();
+    public List<Node> ProgramNodes { get; } = new List<Node>();
 
     public override Output VisitNode()
     {
-        foreach (var node in programNodes)
+        foreach (var node in ProgramNodes)
         {
             node.VisitNode();
         }

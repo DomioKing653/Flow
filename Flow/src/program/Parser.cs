@@ -1,10 +1,9 @@
-﻿using System.Globalization;
-using Flow.classes;
+﻿using Flow.classes;
 using Flow.classes.Nodes;
 using Flow.Nodes;
 
 
-namespace Flow;
+namespace Flow.Program;
 
 /*
  * Error
@@ -22,7 +21,7 @@ public class SyntaxError(string expected, string details) : Exception
  */
 public class Parser
 {
-    ProgramNode root = new ProgramNode();
+    readonly ProgramNode _root = new ProgramNode();
     int _tokenIdx;
     readonly List<Token> _tokens;
     Token? _currentToken;
@@ -54,13 +53,13 @@ public class Parser
         return res;
     }
 
-    public ProgramNode Program()
+    private ProgramNode Program()
     {
         while (true)
         {
             if (_currentToken.Type == TokenType.TtEof)
             {
-                return root;
+                return _root;
             }
 
             Statement();
@@ -140,7 +139,7 @@ public class Parser
                 NextToken();
                 Node expr = Expr();
                 SemiCheck(_currentToken);
-                root.programNodes.Add(new VariableNode(id, expr));
+                _root.ProgramNodes.Add(new VariableNode(id, expr));
                 break;
             case TokenType.TtPrintFn:
                 NextToken();
@@ -158,10 +157,10 @@ public class Parser
 
                 NextToken();
                 SemiCheck(_currentToken);
-                root.programNodes.Add(new PrintNode(expr2));
+                _root.ProgramNodes.Add(new PrintNode(expr2));
                 break;
             case TokenType.TtIdentifier:
-                string id2 = _currentToken.Value;
+                string? id2 = _currentToken.Value;
                 NextToken();
                 if (_currentToken.Type != TokenType.TtEqual)
                 {
@@ -172,7 +171,7 @@ public class Parser
                 Node expr3 = Expr();
                 NextToken();
                 SemiCheck(_currentToken);
-                root.programNodes.Add(new VariableSetNode(id2, expr3));
+                _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
                 break;
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");
