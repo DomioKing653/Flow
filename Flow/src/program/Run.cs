@@ -19,7 +19,6 @@ static class Run
             Interpreter interpreter = new Interpreter();
             interpreter.Interpret(ast);
         }
-
         var exit = false;
         while (!exit)
         {
@@ -35,18 +34,17 @@ static class Run
                     case "F":
                     {
                         var fileName = @"C:\Users\simon\RiderProjects\Flow\Flow\pl\Test.txt";
-                        if (!File.Exists(fileName))
+                        if (args is { Length: > 0 } && args[0] != "")
                         {
-                            if (args is { Length: > 0 } && args[0] != "")
+                            if (File.Exists(args[0]))
                             {
-                                fileName = args[0];
+                                fileName = args[0].ToString();        
                             }
                         }
                         Console.WriteLine("Parsing: " + fileName);
-
                         var input = File.ReadAllText(fileName);
                         Console.WriteLine(input);
-
+                        Console.WriteLine("##############################################");
                         DoJob(input);
                         break;
                     }

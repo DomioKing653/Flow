@@ -118,61 +118,86 @@ public class Parser
     }
 
 
+    
+    /*
+     * Let
+     */
+    void Let()
+    {
+        NextToken();
+        if (_currentToken.Type != TokenType.TtIdentifier)
+        {
+            throw new SyntaxError("Identifier", $"{_currentToken}");
+        }
+
+        var id = _currentToken;
+        NextToken();
+        if (_currentToken.Type != TokenType.TtEqual)
+        {
+            throw new SyntaxError("Equal", $"{_currentToken}");
+        }
+
+        NextToken();
+        Node expr = Expr();
+        SemiCheck(_currentToken);
+        _root.ProgramNodes.Add(new VariableNode(id, expr));
+    }
+    /*
+     * Print
+     */
+    void Print()
+    {
+        NextToken();
+        if (_currentToken.Type != TokenType.TtLParen)
+        {
+            throw new SyntaxError("(", $"{_currentToken}");
+        }
+
+        NextToken();
+        var expr2 = Expr();
+        if (_currentToken.Type != TokenType.TtRParen)
+        {
+            throw new SyntaxError("Parenthesis", $"{_currentToken}");
+        }
+
+        NextToken();
+        SemiCheck(_currentToken);
+        _root.ProgramNodes.Add(new PrintNode(expr2));
+    }
+    /*
+     * Id
+     */
+    void Identifier()
+    {
+        string? id2 = _currentToken.Value;
+        NextToken();
+        if (_currentToken.Type != TokenType.TtEqual)
+        {
+            throw new SyntaxError("Equal", $"{_currentToken}");
+        }
+        NextToken();
+        Node expr3 = Expr();
+        NextToken();
+        SemiCheck(_currentToken);
+        _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
+    }
+    /*
+     * Statement
+     */
     void Statement()
     {
         switch (_currentToken.Type)
         {
             case TokenType.TtLetKw:
-                NextToken();
-                if (_currentToken.Type != TokenType.TtIdentifier)
-                {
-                    throw new SyntaxError("Identifier", $"{_currentToken}");
-                }
-
-                var id = _currentToken;
-                NextToken();
-                if (_currentToken.Type != TokenType.TtEqual)
-                {
-                    throw new SyntaxError("Equal", $"{_currentToken}");
-                }
-
-                NextToken();
-                Node expr = Expr();
-                SemiCheck(_currentToken);
-                _root.ProgramNodes.Add(new VariableNode(id, expr));
+                Let();
                 break;
             case TokenType.TtPrintFn:
-                NextToken();
-                if (_currentToken.Type != TokenType.TtLParen)
-                {
-                    throw new SyntaxError("(", $"{_currentToken}");
-                }
-
-                NextToken();
-                var expr2 = Expr();
-                if (_currentToken.Type != TokenType.TtRParen)
-                {
-                    throw new SyntaxError("Parenthesis", $"{_currentToken}");
-                }
-
-                NextToken();
-                SemiCheck(_currentToken);
-                _root.ProgramNodes.Add(new PrintNode(expr2));
+                Print();
                 break;
             case TokenType.TtIdentifier:
-                string? id2 = _currentToken.Value;
-                NextToken();
-                if (_currentToken.Type != TokenType.TtEqual)
-                {
-                    throw new SyntaxError("Equal", $"{_currentToken}");
-                }
-
-                NextToken();
-                Node expr3 = Expr();
-                NextToken();
-                SemiCheck(_currentToken);
-                _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
+                Identifier();
                 break;
+            
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");
         }

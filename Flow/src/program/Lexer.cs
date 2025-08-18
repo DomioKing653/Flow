@@ -156,7 +156,13 @@ public class Lexer
                 break;
         }
     }
-
+    /*
+     * Creating string
+     */
+    void MakeString()
+    {
+        
+    }
     /*
      * Creating tokens
      */
@@ -199,10 +205,15 @@ public class Lexer
                     NextChar();
                     break;
                 case '"':
-                    _tokens.Add(new Token(TokenType.TtQm, null));
+                    MakeString();
                     NextChar();
                     break;
-
+                case '#':
+                    while (_currentToken!='\n')
+                    {
+                        NextChar();
+                    }
+                    break;
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
@@ -222,7 +233,6 @@ public class Lexer
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
                     }
-
                     break;
             }
         }
