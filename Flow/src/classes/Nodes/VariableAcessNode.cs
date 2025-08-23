@@ -17,6 +17,6 @@ public class VariableAccessNode(Token identifier) : Node
         {
             throw new OutputError($"Variable {Identifier.Value} not found");
         }
-        return new NumbOutput(variable.Value);
+        return new StrOutput(variable.Value);
     }
 }

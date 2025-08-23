@@ -24,16 +24,15 @@ public class Output
      */
 }
 
-public class NumbOutput(float value) : Output
+public class StrOutput(string value) : Output
 {
-    public readonly float Value = value;
+    public readonly string Value = value;
 
     public override string ToString()
     {
         return Value.ToString(CultureInfo.CurrentCulture);
     }
 }
-
 public class Interpreter
 {
     public void Interpret(Node node)

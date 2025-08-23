@@ -2,9 +2,9 @@
 
 namespace Flow;
 
-public class Variable(string identifier, float value) : Output
+public class Variable(string identifier, string value) : Output
 {
-    public float Value { get; } = value;
+    public string Value { get; } = value;
     public string Identifier { get; } = identifier;
 
     public override string ToString()
@@ -16,12 +16,11 @@ public class Variable(string identifier, float value) : Output
 public static class VariableManagement
 {
     public static readonly List<Variable?> Variables = new List<Variable?>();
-
     public static Output AddVariable(VariableNode varNode)
     { 
         Output output = varNode.Value.VisitNode();
 
-        if (output is NumbOutput numbOutput)
+        if (output is StrOutput numbOutput)
         {
             if (varNode.Identifier.Value != null)
             {

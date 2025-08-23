@@ -1,4 +1,5 @@
-﻿using Flow.classes;
+﻿using System.Globalization;
+using Flow.classes;
 
 namespace Flow.Nodes;
 
@@ -24,19 +25,21 @@ class BinaryOpNode : Node
         Output left1 = left.VisitNode();
         Output right1 = right.VisitNode();
 
-        if (left1 is NumbOutput leftOutput && right1 is NumbOutput rightOutput)
+        if (left1 is StrOutput leftOutput && right1 is StrOutput rightOutput)
         {
+            float r=float.Parse(rightOutput.Value,CultureInfo.InvariantCulture);
+            float l=float.Parse(leftOutput.Value,CultureInfo.InvariantCulture);
             switch (opTok?.Type)
             {
                 case TokenType.TtPlus:
-                    return new NumbOutput(leftOutput.Value + rightOutput.Value);
+                    return new StrOutput(leftOutput.Value + rightOutput.Value);
                 case TokenType.TtMinus:
-                    return new NumbOutput(leftOutput.Value - rightOutput.Value);
+                    return new StrOutput(Convert.ToString(l - r));
                 case TokenType.TtMul:
-                    return new NumbOutput(leftOutput.Value * rightOutput.Value);
+                    return new StrOutput(Convert.ToString(l * r));
                 case TokenType.TtDiv:
-                    return rightOutput.Value != 0
-                        ? new NumbOutput(leftOutput.Value / rightOutput.Value)
+                    return r != 0
+                        ? new StrOutput(Convert.ToString(l / r))
                         : throw new Exception("Division by zero");
                 default:
                     throw new Exception($"Unknown operator: {opTok?.Type}");

@@ -23,19 +23,22 @@ public static class TokenType
      * Keywords
      */
     public const string TtLetKw = "LET";
-
     /*
      * FUNCTIONS
      */
     public const string TtPrintFn = "PRINTLN";
     public const string TtInputFn = "INPUT";
-
     /*
      * Misc
      */
     public const string TtIdentifier = "ID";
     public const string TtSemicolon = "SEMICOLON";
-    public const string TtQm = "QUOTATION MARK";
+    /*
+     * Types
+     */
+    public const string TtInt = "INT";
+    public const string TtFLo = "FLOAT";
+    public const string TtStr = "STRING";
     /*
      * Math op.
      */
@@ -45,8 +48,7 @@ public static class TokenType
     public const string TtDiv = "DIVIDE";
     public const string TtRParen = "RPAREN";
     public const string TtLParen = "LPAREN";
-    public const string TtInt = "INT";
-    public const string TtFLo = "FLOAT";
+
     public const string TtEof = "EOF";
     public const string TtEqual = "EQUAL";
 }
@@ -161,7 +163,17 @@ public class Lexer
      */
     void MakeString()
     {
-        
+        string stringText = "";
+        while (true)
+        {
+            if (_currentToken == '"')
+            {
+                _tokens.Add(new Token(TokenType.TtStr, stringText));
+                return;
+            }
+            stringText += _currentToken;
+            NextChar();
+        }
     }
     /*
      * Creating tokens

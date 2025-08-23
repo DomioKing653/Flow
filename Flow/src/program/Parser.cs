@@ -28,7 +28,7 @@ public class Parser
 
     public Parser(List<Token> tokens)
     {
-        this._tokens = tokens;
+        _tokens = tokens;
         _tokenIdx = -1;
         NextToken();
     }
@@ -71,7 +71,7 @@ public class Parser
         string[] numbs = [TokenType.TtFLo, TokenType.TtInt];
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
-            var node = new NumberNode(_currentToken);
+            var node = new ValueNode(_currentToken);
             NextToken();
             return node;
         }
@@ -118,7 +118,6 @@ public class Parser
     }
 
 
-    
     /*
      * Let
      */
@@ -142,6 +141,7 @@ public class Parser
         SemiCheck(_currentToken);
         _root.ProgramNodes.Add(new VariableNode(id, expr));
     }
+
     /*
      * Print
      */
@@ -164,6 +164,7 @@ public class Parser
         SemiCheck(_currentToken);
         _root.ProgramNodes.Add(new PrintNode(expr2));
     }
+
     /*
      * Id
      */
@@ -175,12 +176,14 @@ public class Parser
         {
             throw new SyntaxError("Equal", $"{_currentToken}");
         }
+
         NextToken();
         Node expr3 = Expr();
         NextToken();
         SemiCheck(_currentToken);
         _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
     }
+
     /*
      * Statement
      */
@@ -197,7 +200,7 @@ public class Parser
             case TokenType.TtIdentifier:
                 Identifier();
                 break;
-            
+
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");
         }
