@@ -2,9 +2,9 @@
 
 ## Obsah
 
-1. [Úvod](#úvod)
+1. [Úvod](#Úvod)
 2. [Základní syntaxe](#Základní syntaxe)
-3. [Proměnné](#proměnné)
+3. [Proměnné](#Proměnné)
 4. [Výrazy](#výrazy)
 5. [Výpis na obrazovku](#výpis-na-obrazovku)
 6. [Komentáře](#komentáře)
@@ -15,7 +15,7 @@
 
 ## Úvod
 
-Flow je jednoduchý programovací jazyk vytvořený pro snadné psaní základních programů s podporou proměnných, aritmetiky a výpisu dat. V této příručce najdeš vše, co potřebuješ, aby ses rychle naučil psát programy ve Flow.
+Flow je homemade skriptovací jazyk napsaný c#
 
 ---
 
@@ -23,8 +23,6 @@ Flow je jednoduchý programovací jazyk vytvořený pro snadné psaní základn�
 
 - Každý příkaz **musí končit středníkem** `;`.
 - Jazyk je **case-sensitive** (rozlišuje velká a malá písmena).
-- Klíčová slova jazyka jsou:  
-  `var`, `println`.
 
 ---
 
@@ -64,7 +62,7 @@ var result = (10 + 5) * 2;
 ```
 
 ---
-### Výpis
+## Výpis
 Výpis na obrazovku
 Pro zobrazení hodnot použij příkaz println.
 
@@ -85,7 +83,7 @@ Výstupem bude:
 50
 
 ---
-### Vstup  od uživatele
+## Vstup  od uživatele
 Funkce```input()``` aktuálně vrací pouze int.
 příklad:
 ```
@@ -96,11 +94,9 @@ println(solution);
 ```
 
 ---
-### Komentáře
-Komentáře zatím nejsou podporovány.
+## Komentáře
 
-(Doporučujeme používat externí poznámky, nebo rozšiřovat parser o komentáře.)
-
+```#Toto je koment``` 
 ---
 ### Chybové hlášky
 ```Syntax error: expected ... found ...``` — znamená, že ve zdrojovém kódu je nějaká nesprávná syntaxe (např. chybí středník nebo špatně napsaný příkaz)

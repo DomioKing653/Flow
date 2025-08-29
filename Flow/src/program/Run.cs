@@ -19,6 +19,7 @@ static class Run
             Interpreter interpreter = new Interpreter();
             interpreter.Interpret(ast);
         }
+
         var exit = false;
         while (!exit)
         {
@@ -38,9 +39,10 @@ static class Run
                         {
                             if (File.Exists(args[0]))
                             {
-                                fileName = args[0].ToString();        
+                                fileName = args[0].ToString();
                             }
                         }
+
                         Console.WriteLine("Parsing: " + fileName);
                         var input = File.ReadAllText(fileName);
                         Console.WriteLine(input);

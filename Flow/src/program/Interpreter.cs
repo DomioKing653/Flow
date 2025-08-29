@@ -33,6 +33,7 @@ public class StrOutput(string value) : Output
         return Value;
     }
 }
+
 public class Interpreter
 {
     public void Interpret(Node node)
