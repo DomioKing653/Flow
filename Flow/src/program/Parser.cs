@@ -75,7 +75,6 @@ public class Parser
             NextToken();
             return node;
         }
-
         else if (_currentToken is { Type: TokenType.TtLParen })
         {
             NextToken();
@@ -89,6 +88,10 @@ public class Parser
             return left;
         }
 
+        if (_currentToken.Type == TokenType.TtStr)
+        {
+            
+        }
         if (_currentToken is { Type: TokenType.TtIdentifier })
         {
             var node = new VariableAccessNode(_currentToken);
@@ -109,15 +112,11 @@ public class Parser
             {
                 throw new SyntaxError("')'", $"{_currentToken}");
             }
-
             NextToken();
             return new InputNode();
         }
-
-        throw new SyntaxError("Float or Int", _currentToken.ToString());
+        throw new SyntaxError("Value", _currentToken.ToString());
     }
-
-
     /*
      * Let
      */

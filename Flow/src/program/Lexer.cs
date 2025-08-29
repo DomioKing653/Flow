@@ -23,29 +23,22 @@ public static class TokenType
      * Keywords
      */
     public const string TtLetKw = "LET";
-
     /*
      * FUNCTIONS
      */
     public const string TtPrintFn = "PRINTLN";
-
     public const string TtInputFn = "INPUT";
-
     /*
      * Misc
      */
     public const string TtIdentifier = "ID";
-
     public const string TtSemicolon = "SEMICOLON";
-
     /*
      * Types
      */
     public const string TtInt = "INT";
     public const string TtFLo = "FLOAT";
-
     public const string TtStr = "STRING";
-
     /*
      * Math op.
      */
@@ -85,7 +78,7 @@ public class Lexer
 {
     readonly string? _text;
     private int _tokenIdx;
-    private char? _currentToken;
+    private char _currentToken;
     private readonly List<Token> _tokens;
 
     public Lexer(string? input)
@@ -103,9 +96,9 @@ public class Lexer
     {
         string number = "";
         int dotCount = 0;
-        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.' || _currentToken == ',')
+        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.'|| _currentToken==',')
         {
-            if (_currentToken == '.' || _currentToken == ',')
+            if (_currentToken == '.'||_currentToken==',')
             {
                 if (dotCount > 1)
                 {
@@ -128,7 +121,6 @@ public class Lexer
             _tokens.Add(new Token(TokenType.TtInt, number));
             return;
         }
-
         if (dotCount > 1)
         {
             throw new Error("Illegal character", _currentToken.ToString());
@@ -138,23 +130,17 @@ public class Lexer
             _tokens.Add(new Token(TokenType.TtFLo, number));
         }
     }
-
     /*
      * Making text token like: var, print.
      */
     private void MakeText()
     {
         string text = "";
-        if (_currentToken != null)
+        while (char.IsLetter(_currentToken))
         {
-            char c = _currentToken.Value;
-            while (char.IsLetter(c))
-            {
-                text += _currentToken;
-                NextChar();
-            }    
+            text += _currentToken;
+            NextChar();
         }
-        
 
         switch (text)
         {
@@ -172,7 +158,6 @@ public class Lexer
                 break;
         }
     }
-
     /*
      * Creating string
      */
@@ -186,12 +171,10 @@ public class Lexer
                 _tokens.Add(new Token(TokenType.TtStr, stringText));
                 return;
             }
-            if(_currentToken==null){}
             stringText += _currentToken;
             NextChar();
         }
     }
-
     /*
      * Creating tokens
      */
@@ -238,31 +221,26 @@ public class Lexer
                     NextChar();
                     break;
                 case '#':
-                    while (_currentToken != '\n')
+                    while (_currentToken!='\n')
                     {
                         NextChar();
                     }
-
                     break;
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
-                    if (_currentToken != null)
+                    bool isLetter = char.IsLetter(_currentToken);
+                    if (isLetter)
                     {
-                        if (char.IsLetter(_currentToken.Value))
-                        {
-                            MakeText();
-                        }
-                        else if (char.IsWhiteSpace(_currentToken.Value))
-                        {
-                            NextChar();
-                        }
+                        MakeText();
                     }
-                    
                     else if (isNumber)
                     {
                         MakeNumber();
                     }
-                    
+                    else if (char.IsWhiteSpace(_currentToken))
+                    {
+                        NextChar();
+                    }
                     else
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
@@ -270,11 +248,11 @@ public class Lexer
                     break;
             }
         }
-
         _tokens.Add(new Token(TokenType.TtEof, null));
 
         return _tokens;
     }
+
     /*
      * Advancing position
      */
