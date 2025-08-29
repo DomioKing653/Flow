@@ -30,7 +30,7 @@ public class StrOutput(string value) : Output
 
     public override string ToString()
     {
-        return Value.ToString(CultureInfo.CurrentCulture);
+        return Value;
     }
 }
 public class Interpreter

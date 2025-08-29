@@ -5,34 +5,34 @@ namespace Flow.Nodes;
 
 class BinaryOpNode : Node
 {
-    public Node left;
-    public Node right;
-    public Token? opTok;
+    public readonly Node Left;
+    public readonly Node Right;
+    public readonly Token? OpTok;
 
     public BinaryOpNode(Node left, Token? opTok, Node right)
     {
-        this.left = left;
-        this.right = right;
-        this.opTok = opTok;
+        this.Left = left;
+        this.Right = right;
+        this.OpTok = opTok;
     }
+
     public override string ToString()
     {
-        return $"({left} {opTok} {right})";
+        return $"({Left} {OpTok} {Right})";
     }
 
     public override Output VisitNode()
     {
-        Output left1 = left.VisitNode();
-        Output right1 = right.VisitNode();
-
+        Output left1 = Left.VisitNode();
+        Output right1 = Right.VisitNode();
         if (left1 is StrOutput leftOutput && right1 is StrOutput rightOutput)
         {
-            float r=float.Parse(rightOutput.Value,CultureInfo.InvariantCulture);
-            float l=float.Parse(leftOutput.Value,CultureInfo.InvariantCulture);
-            switch (opTok?.Type)
+            float r = float.Parse(rightOutput.Value);
+            float l = float.Parse(leftOutput.Value);
+            switch (OpTok?.Type)
             {
                 case TokenType.TtPlus:
-                    return new StrOutput(leftOutput.Value + rightOutput.Value);
+                    return new StrOutput(Convert.ToString(l + r));
                 case TokenType.TtMinus:
                     return new StrOutput(Convert.ToString(l - r));
                 case TokenType.TtMul:
@@ -42,10 +42,9 @@ class BinaryOpNode : Node
                         ? new StrOutput(Convert.ToString(l / r))
                         : throw new Exception("Division by zero");
                 default:
-                    throw new Exception($"Unknown operator: {opTok?.Type}");
+                    throw new Exception($"Unknown operator: {OpTok?.Type}");
             }
         }
-
         throw new OutputError($"VisitNode {GetType()} not implemented");
     }
 }

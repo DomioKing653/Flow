@@ -15,8 +15,8 @@ namespace Flow.classes.Nodes
         
         public override Output VisitNode()
         {
-            string normalized = Token?.Value.Replace(',', '.');
-            return new StrOutput(normalized);
+            
+            return new StrOutput(Token?.Value);
         }
     }
 }
