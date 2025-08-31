@@ -6,6 +6,7 @@ public class Variable(string identifier, string value) : Output
 {
     public string Value { get; } = value;
     public string Identifier { get; } = identifier;
+    
 
     public override string ToString()
     {

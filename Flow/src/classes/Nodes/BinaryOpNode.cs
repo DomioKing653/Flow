@@ -14,7 +14,6 @@ class BinaryOpNode : Node
         this.Right = right;
         this.OpTok = opTok;
     }
-
     public override string ToString()
     {
         return $"({Left} {OpTok} {Right})";
@@ -30,13 +29,13 @@ class BinaryOpNode : Node
             float l = float.Parse(leftOutput.Value);
             switch (OpTok?.Type)
             {
-                case TokenType.TtPlus:
+                case TokenType.Plus:
                     return new ValueOutput(Convert.ToString(l + r));
-                case TokenType.TtMinus:
+                case TokenType.Minus:
                     return new ValueOutput(Convert.ToString(l - r));
-                case TokenType.TtMul:
+                case TokenType.Multiply:
                     return new ValueOutput(Convert.ToString(l * r));
-                case TokenType.TtDiv:
+                case TokenType.Divide:
                     return r != 0
                         ? new ValueOutput(Convert.ToString(l / r))
                         : throw new Exception("Division by zero");

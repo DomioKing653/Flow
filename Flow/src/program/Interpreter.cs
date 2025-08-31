@@ -12,6 +12,7 @@ public class OutputError(string message) : Exception
         return message;
     }
 }
+
 /*
  * Nodes
  */
@@ -21,6 +22,7 @@ public class Output
      * Doesn't do anything, just uniting things
      */
 }
+
 public class ValueOutput(string value) : Output
 {
     public readonly string Value = value;

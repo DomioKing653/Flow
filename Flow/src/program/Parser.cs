@@ -20,7 +20,7 @@ public class SyntaxError(string expected, string details) : Exception
  */
 public class Parser
 {
-    private readonly ProgramNode? _root=new ProgramNode();
+    private readonly ProgramNode? _root = new ProgramNode();
     int _tokenIdx;
     readonly List<Token> _tokens;
     Token? _currentToken;
@@ -38,13 +38,13 @@ public class Parser
     void NextToken()
     {
         _tokenIdx++;
-        _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : new Token(TokenType.TtEof, null);
+        _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : new Token(TokenType.Eof, null);
     }
 
     public Node? Parse()
     {
         Node? res = Program();
-        if (_currentToken.Type != TokenType.TtEof)
+        if (_currentToken.Type != TokenType.Eof)
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
         }
@@ -56,7 +56,7 @@ public class Parser
     {
         while (true)
         {
-            if (_currentToken.Type == TokenType.TtEof)
+            if (_currentToken.Type == TokenType.Eof)
             {
                 return _root;
             }
@@ -67,18 +67,18 @@ public class Parser
 
     Node Factor()
     {
-        string[] numbs = [TokenType.TtFLo, TokenType.TtInt];
+        TokenType[] numbs = [TokenType.Float, TokenType.Int];
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
             var node = new ValueNode(_currentToken);
             NextToken();
             return node;
         }
-        else if (_currentToken is { Type: TokenType.TtLParen })
+        else if (_currentToken is { Type: TokenType.Lparen })
         {
             NextToken();
             Node left = Expr();
-            if (_currentToken.Type != TokenType.TtRParen)
+            if (_currentToken.Type != TokenType.Rparen)
             {
                 throw new SyntaxError("')'", $"{_currentToken}");
             }
@@ -87,30 +87,30 @@ public class Parser
             return left;
         }
 
-        if (_currentToken.Type == TokenType.TtStr)
+        if (_currentToken.Type == TokenType.String)
         {
             var node = new ValueNode(_currentToken);
             NextToken();
             return node;
         }
 
-        if (_currentToken is { Type: TokenType.TtIdentifier })
+        if (_currentToken is { Type: TokenType.Identifier })
         {
             var node = new VariableAccessNode(_currentToken);
             NextToken();
             return node;
         }
 
-        if (_currentToken is { Type: TokenType.TtInputFn })
+        if (_currentToken is { Type: TokenType.Input })
         {
             NextToken();
-            if (_currentToken.Type != TokenType.TtLParen)
+            if (_currentToken.Type != TokenType.Lparen)
             {
                 throw new SyntaxError("'('", $"{_currentToken}");
             }
 
             NextToken();
-            if (_currentToken.Type != TokenType.TtRParen)
+            if (_currentToken.Type != TokenType.Rparen)
             {
                 throw new SyntaxError("')'", $"{_currentToken}");
             }
@@ -128,14 +128,14 @@ public class Parser
     void Let()
     {
         NextToken();
-        if (_currentToken.Type != TokenType.TtIdentifier)
+        if (_currentToken.Type != TokenType.Identifier)
         {
             throw new SyntaxError("Identifier", $"{_currentToken}");
         }
 
         var id = _currentToken;
         NextToken();
-        if (_currentToken.Type != TokenType.TtEqual)
+        if (_currentToken.Type != TokenType.Equal)
         {
             throw new SyntaxError("Equal", $"{_currentToken}");
         }
@@ -145,21 +145,20 @@ public class Parser
         SemiCheck(_currentToken);
         if (_root != null) _root.ProgramNodes.Add(new VariableNode(id, expr));
     }
-
     /*
      * Print
      */
     void Print()
     {
         NextToken();
-        if (_currentToken.Type != TokenType.TtLParen)
+        if (_currentToken.Type != TokenType.Lparen)
         {
             throw new SyntaxError("(", $"{_currentToken}");
         }
 
         NextToken();
         var expr2 = Expr();
-        if (_currentToken.Type != TokenType.TtRParen)
+        if (_currentToken.Type != TokenType.Rparen)
         {
             throw new SyntaxError("Parenthesis", $"{_currentToken}");
         }
@@ -176,7 +175,7 @@ public class Parser
     {
         string? id2 = _currentToken.Value;
         NextToken();
-        if (_currentToken.Type != TokenType.TtEqual)
+        if (_currentToken.Type != TokenType.Equal)
         {
             throw new SyntaxError("Equal", $"{_currentToken}");
         }
@@ -187,6 +186,7 @@ public class Parser
         SemiCheck(_currentToken);
         _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
     }
+
     /*
      * Statement
      */
@@ -194,16 +194,15 @@ public class Parser
     {
         switch (_currentToken.Type)
         {
-            case TokenType.TtLetKw:
+            case TokenType.Let:
                 Let();
                 break;
-            case TokenType.TtPrintFn:
+            case TokenType.Println:
                 Print();
                 break;
-            case TokenType.TtIdentifier:
+            case TokenType.Identifier:
                 Identifier();
                 break;
-
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");
         }
@@ -211,7 +210,7 @@ public class Parser
 
     Node Term()
     {
-        string[] ops = [TokenType.TtDiv, TokenType.TtMul];
+        TokenType[] ops = [TokenType.Divide, TokenType.Multiply];
         Node left = Factor();
 
         while (_currentToken != null && ops.Contains(_currentToken.Type))
@@ -227,7 +226,7 @@ public class Parser
 
     void SemiCheck(Token token)
     {
-        if (token.Type != TokenType.TtSemicolon)
+        if (token.Type != TokenType.Semicolon)
         {
             throw new SyntaxError("Semicolon", $"{token}");
         }
@@ -237,7 +236,7 @@ public class Parser
 
     Node Expr()
     {
-        string[] ops = [TokenType.TtPlus, TokenType.TtMinus];
+        TokenType[] ops = [TokenType.Plus, TokenType.Minus];
         Node left = Term();
         while (_currentToken != null && ops.Contains(_currentToken.Type))
         {

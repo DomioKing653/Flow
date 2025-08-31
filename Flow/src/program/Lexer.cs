@@ -13,35 +13,30 @@ public class Error(string name, string message) : Exception
         return $"{Name}: {Message}";
     }
 }
-
 /*
  * Tokens
  */
-public static class TokenType
+/*public static class TokenType
 {
-    /*
-     * Keywords
-     */
+   
     public const string TtLetKw = "LET";
-    /*
-     * FUNCTIONS
-     */
+    public const string TtWhile = "WHILE";
+
     public const string TtPrintFn = "PRINTLN";
+
     public const string TtInputFn = "INPUT";
-    /*
-     * Misc
-     */
+
+
     public const string TtIdentifier = "ID";
+
     public const string TtSemicolon = "SEMICOLON";
-    /*
-     * Types
-     */
+
+
     public const string TtInt = "INT";
     public const string TtFLo = "FLOAT";
     public const string TtStr = "STRING";
-    /*
-     * Math op.
-     */
+    public const string TtBool = "BOOLEAN";
+
     public const string TtPlus = "PLUS";
     public const string TtMinus = "MINUS";
     public const string TtMul = "MULTIPLY";
@@ -51,11 +46,11 @@ public static class TokenType
 
     public const string TtEof = "EOF";
     public const string TtEqual = "EQUAL";
-}
+}*/
 
-public class Token(string type, string? value)
+public class Token(TokenType type, string? value)
 {
-    public readonly string Type = type;
+    public readonly TokenType Type = type;
     public readonly string? Value = value;
 
     public override string ToString()
@@ -88,7 +83,6 @@ public class Lexer
         NextChar();
         _tokens = new List<Token>();
     }
-
     /*
      * Creating numbers
      */
@@ -96,7 +90,7 @@ public class Lexer
     {
         string number = "";
         int dotCount = 0;
-        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.'|| _currentToken==',')
+        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.' || _currentToken == ',')
         {
             if (_currentToken == '.')
             {
@@ -118,18 +112,20 @@ public class Lexer
 
         if (dotCount == 0)
         {
-            _tokens.Add(new Token(TokenType.TtInt, number));
+            _tokens.Add(new Token(TokenType.Int, number));
             return;
         }
+
         if (dotCount > 1)
         {
             throw new Error("Illegal character", _currentToken.ToString());
         }
         else
         {
-            _tokens.Add(new Token(TokenType.TtFLo, number));
+            _tokens.Add(new Token(TokenType.Float, number));
         }
     }
+
     /*
      * Making text token like: var, print.
      */
@@ -145,19 +141,26 @@ public class Lexer
         switch (text)
         {
             case "let":
-                _tokens.Add(new Token(TokenType.TtLetKw, null));
+                _tokens.Add(new Token(TokenType.Let, null));
                 break;
             case "println":
-                _tokens.Add(new Token(TokenType.TtPrintFn, null));
+                _tokens.Add(new Token(TokenType.Println, null));
                 break;
             case "input":
-                _tokens.Add(new Token(TokenType.TtInputFn, null));
+                _tokens.Add(new Token(TokenType.Input, null));
+                break;
+            case "false":
+                _tokens.Add(new Token(TokenType.Boolean,null));
+                break;
+            case "true":
+                _tokens.Add(new Token(TokenType.Boolean, null));
                 break;
             default:
-                _tokens.Add(new Token(TokenType.TtIdentifier, text));
+                _tokens.Add(new Token(TokenType.Identifier, text));
                 break;
         }
     }
+
     /*
      * Creating string
      */
@@ -169,13 +172,15 @@ public class Lexer
         {
             if (_currentToken == '"')
             {
-                _tokens.Add(new Token(TokenType.TtStr, stringText));
+                _tokens.Add(new Token(TokenType.String, stringText));
                 return;
             }
+
             stringText += _currentToken;
             NextChar();
         }
     }
+
     /*
      * Creating tokens
      */
@@ -186,35 +191,35 @@ public class Lexer
             switch (_currentToken)
             {
                 case '+':
-                    _tokens.Add(new Token(TokenType.TtPlus, null));
+                    _tokens.Add(new Token(TokenType.Plus, null));
                     NextChar();
                     break;
                 case '-':
-                    _tokens.Add(new Token(TokenType.TtMinus, null));
+                    _tokens.Add(new Token(TokenType.Minus, null));
                     NextChar();
                     break;
                 case ')':
-                    _tokens.Add(new Token(TokenType.TtRParen, null));
+                    _tokens.Add(new Token(TokenType.Rparen, null));
                     NextChar();
                     break;
                 case '(':
-                    _tokens.Add(new Token(TokenType.TtLParen, null));
+                    _tokens.Add(new Token(TokenType.Lparen, null));
                     NextChar();
                     break;
                 case '*':
-                    _tokens.Add(new Token(TokenType.TtMul, null));
+                    _tokens.Add(new Token(TokenType.Multiply, null));
                     NextChar();
                     break;
                 case '/':
-                    _tokens.Add(new Token(TokenType.TtDiv, null));
+                    _tokens.Add(new Token(TokenType.Divide, null));
                     NextChar();
                     break;
                 case '=':
-                    _tokens.Add(new Token(TokenType.TtEqual, null));
+                    _tokens.Add(new Token(TokenType.Equal, null));
                     NextChar();
                     break;
                 case ';':
-                    _tokens.Add(new Token(TokenType.TtSemicolon, null));
+                    _tokens.Add(new Token(TokenType.Semicolon, null));
                     NextChar();
                     break;
                 case '"':
@@ -222,7 +227,7 @@ public class Lexer
                     NextChar();
                     break;
                 case '#':
-                    while (_currentToken!='\n')
+                    while (_currentToken != '\n')
                     {
                         NextChar();
                     }
@@ -249,11 +254,10 @@ public class Lexer
                     break;
             }
         }
-        _tokens.Add(new Token(TokenType.TtEof, null));
+        _tokens.Add(new Token(TokenType.Eof, null));
 
         return _tokens;
     }
-
     /*
      * Advancing position
      */
