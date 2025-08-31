@@ -20,7 +20,7 @@ public static class VariableManagement
     { 
         Output output = varNode.Value.VisitNode();
 
-        if (output is StrOutput numbOutput)
+        if (output is ValueOutput numbOutput)
         {
             if (varNode.Identifier.Value != null)
             {

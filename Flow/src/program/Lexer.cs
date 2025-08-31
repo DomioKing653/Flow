@@ -98,7 +98,7 @@ public class Lexer
         int dotCount = 0;
         while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.'|| _currentToken==',')
         {
-            if (_currentToken == '.'||_currentToken==',')
+            if (_currentToken == '.')
             {
                 if (dotCount > 1)
                 {

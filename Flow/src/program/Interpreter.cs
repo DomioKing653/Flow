@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Flow.classes;
+﻿using Flow.classes;
 
 namespace Flow;
 
@@ -13,7 +12,6 @@ public class OutputError(string message) : Exception
         return message;
     }
 }
-
 /*
  * Nodes
  */
@@ -23,8 +21,7 @@ public class Output
      * Doesn't do anything, just uniting things
      */
 }
-
-public class StrOutput(string value) : Output
+public class ValueOutput(string value) : Output
 {
     public readonly string Value = value;
 

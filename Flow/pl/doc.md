@@ -33,7 +33,7 @@ Proměnné deklaruješ pomocí klíčového slova `var`. Každá proměnná mus�
 ### Deklarace
 
 ```flow
-var jmeno_promenne = výraz;
+let jmeno_promenne = výraz;
 ```
 ```jmeno_promenne```: název proměnné (může obsahovat písmena, číslice a podtržítka, nesmí začínat číslem)
 
@@ -41,9 +41,9 @@ var jmeno_promenne = výraz;
 
 Příklad
 ```
-var x = 10;
-var y = 20;
-var suma = x + y;
+let x = 10;
+let y = 20;
+let suma = x + y;
 ```
 Výrazy
 Podporované operace jsou:
@@ -58,7 +58,7 @@ Závorky
 Můžeš používat závorky ( a ) pro určení priority operací:
 
 ```
-var result = (10 + 5) * 2;
+let result = (10 + 5) * 2;
 ```
 
 ---
@@ -72,7 +72,7 @@ Syntaxe
 
 Příklad
 ```
-var x = 42;
+let x = 42;
 println(x);
 println(x + 8);
 ```
@@ -110,9 +110,9 @@ Jiná chybová hláška ti přesně řekne, co je špatně — vždy pečlivě k
 ## Kompletní příklady
 #### Příklad 1 – základní aritmetika a výpis
 ```
-var a = 5;
-var b = 3;
-var c = a * (b + 2);
+let a = 5;
+let b = 3;
+let c = a * (b + 2);
 println(c);
 ```
 Výstup:

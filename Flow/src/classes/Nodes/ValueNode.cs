@@ -12,11 +12,9 @@ namespace Flow.classes.Nodes
         {
             return $"({Token})";
         }
-        
         public override Output VisitNode()
         {
-            
-            return new StrOutput(Token?.Value);
+            return new ValueOutput(Token?.Value);
         }
     }
 }

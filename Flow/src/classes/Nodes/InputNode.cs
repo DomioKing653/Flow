@@ -7,7 +7,7 @@ namespace Flow.classes.Nodes
         public override Output VisitNode()
         {
             Console.Write("Enter Input: ");
-            return new StrOutput(Console.ReadLine());
+            return new ValueOutput(Console.ReadLine());
         }
     }
 }
