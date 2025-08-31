@@ -163,6 +163,7 @@ public class Lexer
      */
     void MakeString()
     {
+        NextChar();
         string stringText = "";
         while (true)
         {

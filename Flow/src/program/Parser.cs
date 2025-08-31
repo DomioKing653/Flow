@@ -2,7 +2,6 @@
 using Flow.classes.Nodes;
 using Flow.Nodes;
 
-
 namespace Flow.Program;
 
 /*
@@ -21,7 +20,7 @@ public class SyntaxError(string expected, string details) : Exception
  */
 public class Parser
 {
-    readonly ProgramNode _root = new ProgramNode();
+    private readonly ProgramNode? _root=new ProgramNode();
     int _tokenIdx;
     readonly List<Token> _tokens;
     Token? _currentToken;
@@ -42,9 +41,9 @@ public class Parser
         _currentToken = _tokenIdx < _tokens.Count ? _tokens[_tokenIdx] : new Token(TokenType.TtEof, null);
     }
 
-    public Node Parse()
+    public Node? Parse()
     {
-        Node res = Program();
+        Node? res = Program();
         if (_currentToken.Type != TokenType.TtEof)
         {
             throw new Exception("Expected end of input (EOF) but found extra tokens");
@@ -53,7 +52,7 @@ public class Parser
         return res;
     }
 
-    private ProgramNode Program()
+    private ProgramNode? Program()
     {
         while (true)
         {
@@ -90,8 +89,11 @@ public class Parser
 
         if (_currentToken.Type == TokenType.TtStr)
         {
-            
+            var node = new ValueNode(_currentToken);
+            NextToken();
+            return node;
         }
+
         if (_currentToken is { Type: TokenType.TtIdentifier })
         {
             var node = new VariableAccessNode(_currentToken);
@@ -112,11 +114,14 @@ public class Parser
             {
                 throw new SyntaxError("')'", $"{_currentToken}");
             }
+
             NextToken();
             return new InputNode();
         }
+
         throw new SyntaxError("Value", _currentToken.ToString());
     }
+
     /*
      * Let
      */
@@ -138,7 +143,7 @@ public class Parser
         NextToken();
         Node expr = Expr();
         SemiCheck(_currentToken);
-        _root.ProgramNodes.Add(new VariableNode(id, expr));
+        if (_root != null) _root.ProgramNodes.Add(new VariableNode(id, expr));
     }
 
     /*
@@ -182,7 +187,6 @@ public class Parser
         SemiCheck(_currentToken);
         _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
     }
-
     /*
      * Statement
      */

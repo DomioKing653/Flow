@@ -36,7 +36,7 @@ public class StrOutput(string value) : Output
 
 public class Interpreter
 {
-    public void Interpret(Node node)
+    public void Interpret(Node? node)
     {
         node.VisitNode();
     }
