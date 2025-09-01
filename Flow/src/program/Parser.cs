@@ -173,7 +173,7 @@ public class Parser
         var expr2 = Expr();
         if (_currentToken.Type != TokenType.Rparen)
         {
-            throw new SyntaxError("Parenthesis", $"{_currentToken}");
+            throw new SyntaxError(")", $"{_currentToken}");
         }
 
         NextToken();
@@ -203,6 +203,9 @@ public class Parser
     /*
      * Statement
      */
+    /*
+     * While
+     */
     void While(ProgramListNode node)
     {
         NextToken();
@@ -211,8 +214,8 @@ public class Parser
             throw new SyntaxError("(", $"{_currentToken}");
         }
 
-        var expression = Factor();
         NextToken();
+        var expression = Factor();
         if (_currentToken.Type != TokenType.Rparen)
         {
             throw new SyntaxError("')'", $"{_currentToken}");
@@ -225,17 +228,22 @@ public class Parser
         }
 
         NextToken();
-        ProgramListNode? nodes = null;
-        while (_currentToken!.Type != TokenType.Eof || _currentToken.Type != TokenType.OpeningParenthesis)
+        WhileNode whileNode = new WhileNode(expression);
+        while (_currentToken!.Type != TokenType.Eof || _currentToken.Type != TokenType.ClosingParenthesis)
         {
-            Statement(nodes!);
-            if (_currentToken.Type != TokenType.Eof)
+            Statement(whileNode);
+            if (_currentToken.Type == TokenType.Eof)
             {
                 throw new SyntaxError("'}'", $"{_currentToken}");
             }
-        }
 
-        node.Nodes.Add(new WhileNode(nodes!.Nodes, expression));
+            if (_currentToken.Type == TokenType.ClosingParenthesis)
+            {
+                node.Nodes.Add(whileNode);
+                NextToken();
+                return;
+            }
+        }
     }
 
     void Statement(ProgramListNode listNode)

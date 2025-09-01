@@ -119,6 +119,9 @@ public class Lexer
             case "true":
                 _tokens.Add(new Token(TokenType.Boolean, "true"));
                 break;
+            case "while":
+                _tokens.Add(new Token(TokenType.While, null));
+                break;
             default:
                 _tokens.Add(new Token(TokenType.Identifier, text));
                 break;

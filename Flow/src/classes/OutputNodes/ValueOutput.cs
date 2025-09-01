@@ -2,8 +2,8 @@
 
 public class ValueOutput : Output
 {
-    public readonly string Value = null!;
-    public readonly bool BoolValue;
+    public readonly string? Value;
+    public readonly bool? BoolValue;
     public ValueOutput(string value)
     {
         Value = value;

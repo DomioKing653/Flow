@@ -33,6 +33,7 @@ public enum TokenType
     //Keywords
     Let,
     While,
+    If,
 
     //Functions
     Println,

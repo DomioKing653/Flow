@@ -1,14 +1,26 @@
-﻿namespace Flow.classes.Nodes;
+﻿using Flow.classes.Output;
+using Flow.Program;
 
-public class WhileNode(List<Node>nodes,Node expression):Node
+namespace Flow.classes.Nodes;
+
+public class WhileNode(Node expression):ProgramListNode
 {
-    private readonly List<Node> nodes = nodes;
+    public override List<Node> Nodes { get; }=new List<Node>();
     public override Output.Output VisitNode()
     {
-        foreach (var node in nodes)
+        var expr=expression.VisitNode();
+        if (expr is ValueOutput { BoolValue: not null } value)
         {
-            node.VisitNode();
+            while(value.BoolValue == true)
+            {
+                foreach (var node in Nodes)
+                {
+                    node.VisitNode();
+                }
+                expr=expression.VisitNode();
+            }
         }
-        return new Output.Output();
+
+        throw new SyntaxError("Expression",expression.ToString());
     }
 }
