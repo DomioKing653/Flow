@@ -90,7 +90,7 @@ public class Lexer
     {
         string number = "";
         int dotCount = 0;
-        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == '.' || _currentToken == ',')
+        while (int.TryParse(_currentToken.ToString(), out int _) || _currentToken == ',')
         {
             if (_currentToken == '.')
             {
@@ -98,7 +98,6 @@ public class Lexer
                 {
                     break;
                 }
-
                 dotCount++;
                 number += '.';
                 NextChar();

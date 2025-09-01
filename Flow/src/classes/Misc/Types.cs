@@ -6,12 +6,15 @@ public enum DataType
     Number,
     String
 }
+
 public enum TokenType
 {
+    //Types
     String,
     Float,
     Int,
     Boolean,
+    //Math Op.
     Plus,
     Minus,
     Multiply,
@@ -19,11 +22,14 @@ public enum TokenType
     Lparen,
     Rparen,
     Equal,
+    //Keywords
     Let,
     While,
+    //Functions
     Println,
     Input,
-    Eof,
     Identifier,
     Semicolon,
+    //End
+    Eof,
 }
