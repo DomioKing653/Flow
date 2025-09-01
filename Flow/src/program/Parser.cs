@@ -104,8 +104,8 @@ public class Parser
                 node = new BoolNode(BooleanType.False);
             NextToken();
             return node;
-            
         }
+
         if (_currentToken is { Type: TokenType.Identifier })
         {
             var node = new VariableAccessNode(_currentToken);
@@ -157,6 +157,7 @@ public class Parser
         SemiCheck(_currentToken);
         if (_root != null) node.Nodes.Add(new VariableNode(id, expr));
     }
+
     /*
      * Print
      */
@@ -204,15 +205,39 @@ public class Parser
      */
     void While(ProgramListNode node)
     {
-        ProgramListNode? nodes = null;
-        while (_currentToken!.Type != TokenType.Eof)
+        NextToken();
+        if (_currentToken.Type != TokenType.Lparen)
         {
-            Statement(nodes!);
+            throw new SyntaxError("(", $"{_currentToken}");
         }
 
-        node.Nodes.Add(new WhileNode(nodes!.Nodes));
-        
+        var expression = Factor();
+        NextToken();
+        if (_currentToken.Type != TokenType.Rparen)
+        {
+            throw new SyntaxError("')'", $"{_currentToken}");
+        }
+
+        NextToken();
+        if (_currentToken.Type != TokenType.OpeningParenthesis)
+        {
+            throw new SyntaxError("'{'", $"{_currentToken}");
+        }
+
+        NextToken();
+        ProgramListNode? nodes = null;
+        while (_currentToken!.Type != TokenType.Eof || _currentToken.Type != TokenType.OpeningParenthesis)
+        {
+            Statement(nodes!);
+            if (_currentToken.Type != TokenType.Eof)
+            {
+                throw new SyntaxError("'}'", $"{_currentToken}");
+            }
+        }
+
+        node.Nodes.Add(new WhileNode(nodes!.Nodes, expression));
     }
+
     void Statement(ProgramListNode listNode)
     {
         switch (_currentToken!.Type)

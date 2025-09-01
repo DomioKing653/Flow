@@ -196,6 +196,15 @@ public class Lexer
                         NextChar();
                     }
                     break;
+                case'{':
+                    _tokens.Add(new Token(TokenType.OpeningParenthesis, null));
+                    NextChar();
+                    break;
+                case '}':
+                    _tokens.Add(new Token(TokenType.ClosingParenthesis, null));
+                    NextChar();
+                    break;
+                
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
@@ -219,7 +228,6 @@ public class Lexer
             }
         }
         _tokens.Add(new Token(TokenType.Eof, null));
-
         return _tokens;
     }
     /*
