@@ -13,41 +13,6 @@ public class Error(string name, string message) : Exception
         return $"{Name}: {Message}";
     }
 }
-/*
- * Tokens
- */
-/*public static class TokenType
-{
-   
-    public const string TtLetKw = "LET";
-    public const string TtWhile = "WHILE";
-
-    public const string TtPrintFn = "PRINTLN";
-
-    public const string TtInputFn = "INPUT";
-
-
-    public const string TtIdentifier = "ID";
-
-    public const string TtSemicolon = "SEMICOLON";
-
-
-    public const string TtInt = "INT";
-    public const string TtFLo = "FLOAT";
-    public const string TtStr = "STRING";
-    public const string TtBool = "BOOLEAN";
-
-    public const string TtPlus = "PLUS";
-    public const string TtMinus = "MINUS";
-    public const string TtMul = "MULTIPLY";
-    public const string TtDiv = "DIVIDE";
-    public const string TtRParen = "RPAREN";
-    public const string TtLParen = "LPAREN";
-
-    public const string TtEof = "EOF";
-    public const string TtEqual = "EQUAL";
-}*/
-
 public class Token(TokenType type, string? value)
 {
     public readonly TokenType Type = type;
@@ -149,10 +114,10 @@ public class Lexer
                 _tokens.Add(new Token(TokenType.Input, null));
                 break;
             case "false":
-                _tokens.Add(new Token(TokenType.Boolean,null));
+                _tokens.Add(new Token(TokenType.Boolean,"false"));
                 break;
             case "true":
-                _tokens.Add(new Token(TokenType.Boolean, null));
+                _tokens.Add(new Token(TokenType.Boolean, "true"));
                 break;
             default:
                 _tokens.Add(new Token(TokenType.Identifier, text));

@@ -1,4 +1,5 @@
 ﻿using Flow.classes;
+using Flow.classes.Output;
 
 namespace Flow;
 
@@ -16,23 +17,13 @@ public class OutputError(string message) : Exception
 /*
  * Nodes
  */
-public class Output
+
+
+
+public class BooleanOutput(bool value) : Output
 {
-    /*
-     * Doesn't do anything, just uniting things
-     */
+    public bool Value { get;set; }=value;
 }
-
-public class ValueOutput(string value) : Output
-{
-    public readonly string Value = value;
-
-    public override string ToString()
-    {
-        return Value;
-    }
-}
-
 public class Interpreter
 {
     public void Interpret(Node? node)

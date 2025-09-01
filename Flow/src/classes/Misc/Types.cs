@@ -6,7 +6,11 @@ public enum DataType
     Number,
     String
 }
-
+public enum BooleanType
+{
+    True,
+    False
+}
 public enum TokenType
 {
     //Types

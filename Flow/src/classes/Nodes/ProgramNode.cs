@@ -1,14 +1,16 @@
 ﻿using Flow.classes;
+using Flow.classes.Nodes;
+using Flow.classes.Output;
 
 namespace Flow.Nodes;
 
-public class ProgramNode : Node
+public class ProgramNode : ProgramListNode
 {
-    public List<Node> ProgramNodes { get; } = new List<Node>();
+    public override List<Node> Nodes { get; } = new List<Node>();
 
     public override Output VisitNode()
     {
-        foreach (var node in ProgramNodes)
+        foreach (var node in Nodes)
         {
             node.VisitNode();
         }

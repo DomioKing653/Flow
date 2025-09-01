@@ -1,4 +1,5 @@
-﻿using Flow.classes;
+﻿using System.Diagnostics;
+using Flow.classes;
 using Flow.classes.Nodes;
 using Flow.Nodes;
 
@@ -61,7 +62,7 @@ public class Parser
                 return _root;
             }
 
-            Statement();
+            Statement(_root);
         }
     }
 
@@ -94,6 +95,17 @@ public class Parser
             return node;
         }
 
+        if (_currentToken.Type == TokenType.Boolean)
+        {
+            var node = new BoolNode(BooleanType.True);
+            if (_currentToken.Value == "true")
+                node = new BoolNode(BooleanType.True);
+            if (_currentToken.Value == "false")
+                node = new BoolNode(BooleanType.False);
+            NextToken();
+            return node;
+            
+        }
         if (_currentToken is { Type: TokenType.Identifier })
         {
             var node = new VariableAccessNode(_currentToken);
@@ -125,7 +137,7 @@ public class Parser
     /*
      * Let
      */
-    void Let()
+    void Let(ProgramListNode node)
     {
         NextToken();
         if (_currentToken.Type != TokenType.Identifier)
@@ -143,12 +155,12 @@ public class Parser
         NextToken();
         Node expr = Expr();
         SemiCheck(_currentToken);
-        if (_root != null) _root.ProgramNodes.Add(new VariableNode(id, expr));
+        if (_root != null) node.Nodes.Add(new VariableNode(id, expr));
     }
     /*
      * Print
      */
-    void Print()
+    void Print(ProgramListNode node)
     {
         NextToken();
         if (_currentToken.Type != TokenType.Lparen)
@@ -165,13 +177,13 @@ public class Parser
 
         NextToken();
         SemiCheck(_currentToken);
-        _root.ProgramNodes.Add(new PrintNode(expr2));
+        node.Nodes.Add(new PrintNode(expr2));
     }
 
     /*
      * Id
      */
-    void Identifier()
+    void Identifier(ProgramListNode node)
     {
         string? id2 = _currentToken.Value;
         NextToken();
@@ -184,24 +196,38 @@ public class Parser
         Node expr3 = Expr();
         NextToken();
         SemiCheck(_currentToken);
-        _root.ProgramNodes.Add(new VariableSetNode(id2, expr3));
+        node.Nodes.Add(new VariableSetNode(id2, expr3));
     }
 
     /*
      * Statement
      */
-    void Statement()
+    void While(ProgramListNode node)
     {
-        switch (_currentToken.Type)
+        ProgramListNode? nodes = null;
+        while (_currentToken!.Type != TokenType.Eof)
+        {
+            Statement(nodes!);
+        }
+
+        node.Nodes.Add(new WhileNode(nodes!.Nodes));
+        
+    }
+    void Statement(ProgramListNode listNode)
+    {
+        switch (_currentToken!.Type)
         {
             case TokenType.Let:
-                Let();
+                Let(listNode);
                 break;
             case TokenType.Println:
-                Print();
+                Print(listNode);
                 break;
             case TokenType.Identifier:
-                Identifier();
+                Identifier(listNode);
+                break;
+            case TokenType.While:
+                While(listNode);
                 break;
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");

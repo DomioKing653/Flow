@@ -4,5 +4,5 @@
  */
 public abstract class Node
 {
-    public abstract Output VisitNode();
+    public abstract Output.Output VisitNode();
 }
