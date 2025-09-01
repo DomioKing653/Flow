@@ -13,6 +13,7 @@ public class Error(string name, string message) : Exception
         return $"{Name}: {Message}";
     }
 }
+
 public class Token(TokenType type, string? value)
 {
     public readonly TokenType Type = type;
@@ -43,11 +44,12 @@ public class Lexer
 
     public Lexer(string? input)
     {
-        this._text = input;
-        this._tokenIdx = -1;
+        _text = input;
+        _tokenIdx = -1;
         NextChar();
         _tokens = new List<Token>();
     }
+
     /*
      * Creating numbers
      */
@@ -63,6 +65,7 @@ public class Lexer
                 {
                     break;
                 }
+
                 dotCount++;
                 number += '.';
                 NextChar();
@@ -114,13 +117,22 @@ public class Lexer
                 _tokens.Add(new Token(TokenType.Input, null));
                 break;
             case "false":
-                _tokens.Add(new Token(TokenType.Boolean,"false"));
+                _tokens.Add(new Token(TokenType.Boolean, "false"));
                 break;
             case "true":
                 _tokens.Add(new Token(TokenType.Boolean, "true"));
                 break;
             case "while":
                 _tokens.Add(new Token(TokenType.While, null));
+                break;
+            case "if":
+                _tokens.Add(new Token(TokenType.If, null));
+                break;
+            case "break":
+                _tokens.Add(new Token(TokenType.Break, null));
+                break;
+            case "continue":
+                _tokens.Add(new Token(TokenType.Continue, null));
                 break;
             default:
                 _tokens.Add(new Token(TokenType.Identifier, text));
@@ -198,8 +210,9 @@ public class Lexer
                     {
                         NextChar();
                     }
+
                     break;
-                case'{':
+                case '{':
                     _tokens.Add(new Token(TokenType.OpeningParenthesis, null));
                     NextChar();
                     break;
@@ -207,7 +220,6 @@ public class Lexer
                     _tokens.Add(new Token(TokenType.ClosingParenthesis, null));
                     NextChar();
                     break;
-                
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
@@ -227,12 +239,15 @@ public class Lexer
                     {
                         throw new Error("Illegal character", _currentToken.ToString());
                     }
+
                     break;
             }
         }
+
         _tokens.Add(new Token(TokenType.Eof, null));
         return _tokens;
     }
+
     /*
      * Advancing position
      */

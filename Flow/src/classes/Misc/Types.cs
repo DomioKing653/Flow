@@ -34,6 +34,8 @@ public enum TokenType
     Let,
     While,
     If,
+    Continue,
+    Break,
 
     //Functions
     Println,

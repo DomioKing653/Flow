@@ -200,9 +200,7 @@ public class Parser
         node.Nodes.Add(new VariableSetNode(id2, expr3));
     }
 
-    /*
-     * Statement
-     */
+
     /*
      * While
      */
@@ -246,6 +244,49 @@ public class Parser
         }
     }
 
+    public void If(ProgramListNode node)
+    {
+        NextToken();
+        if (_currentToken.Type != TokenType.Lparen)
+        {
+            throw new SyntaxError("(", $"{_currentToken}");
+        }
+
+        NextToken();
+        var expression = Factor();
+        if (_currentToken.Type != TokenType.Rparen)
+        {
+            throw new SyntaxError("')'", $"{_currentToken}");
+        }
+
+        NextToken();
+        if (_currentToken.Type != TokenType.OpeningParenthesis)
+        {
+            throw new SyntaxError("'{'", $"{_currentToken}");
+        }
+
+        NextToken();
+        IfNode whileNode = new IfNode(expression);
+        while (_currentToken!.Type != TokenType.Eof || _currentToken.Type != TokenType.ClosingParenthesis)
+        {
+            Statement(whileNode);
+            if (_currentToken.Type == TokenType.Eof)
+            {
+                throw new SyntaxError("'}'", $"{_currentToken}");
+            }
+
+            if (_currentToken.Type == TokenType.ClosingParenthesis)
+            {
+                node.Nodes.Add(whileNode);
+                NextToken();
+                return;
+            }
+        }
+    }
+
+    /*
+     * Statement
+     */
     void Statement(ProgramListNode listNode)
     {
         switch (_currentToken!.Type)
@@ -261,6 +302,9 @@ public class Parser
                 break;
             case TokenType.While:
                 While(listNode);
+                break;
+            case TokenType.If:
+                If(listNode);
                 break;
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");
