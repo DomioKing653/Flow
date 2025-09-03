@@ -3,11 +3,24 @@ using Flow.Nodes;
 
 namespace Flow;
 
-public class Variable(string identifier, string value) : Output
+public class Variable: Output
 {
-    public string Value { get; } = value;
-    public string Identifier { get; } = identifier;
+    public string? Value { get; }
+    public string Identifier { get; }
+    public bool? boolValue { get; set; }
+    public Variable(string identifier, string value)
+    {
+        Value = value;
+        Identifier = identifier;
+    }
+
+    public Variable(string identifier, bool? value)
+    {
+        Identifier = identifier;
+        boolValue = value;
+    }
     
+
 
     public override string ToString()
     {
@@ -17,16 +30,24 @@ public class Variable(string identifier, string value) : Output
 
 public static class VariableManagement
 {
-    public static readonly List<Variable?> Variables = new List<Variable?>();
-    public static Output AddVariable(VariableNode varNode)
+    public static  List<Variable?> Variables = new List<Variable?>();
+    public static Output? AddVariable(VariableNode varNode)
     { 
-        Output output = varNode.Value.VisitNode();
+        Output? output = varNode.Value.VisitNode();
 
-        if (output is ValueOutput numbOutput)
+        if (output is ValueOutput valueOutput)
         {
             if (varNode.Identifier.Value != null)
             {
-                var variable = new Variable(varNode.Identifier.Value, numbOutput.Value);
+                Variable variable = null;
+                if (valueOutput.BoolValue is not null)
+                {
+                    variable = new Variable(varNode.Identifier.Value, valueOutput.BoolValue);    
+                }
+                else
+                {
+                    variable = new Variable(varNode.Identifier.Value, valueOutput.Value);
+                }
                 Variables.Add(variable);
                 return new Output();
             }

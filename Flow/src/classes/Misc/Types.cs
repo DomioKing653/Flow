@@ -39,6 +39,7 @@ public enum TokenType
 
     //Functions
     Println,
+    Print,
     Input,
 
     //Misc.

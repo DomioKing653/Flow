@@ -71,7 +71,7 @@ public class Parser
         TokenType[] numbs = [TokenType.Float, TokenType.Int];
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
-            var node = new ValueNode(_currentToken);
+            var node = new ValueNode(_currentToken,DataType.Number);
             NextToken();
             return node;
         }
@@ -90,18 +90,18 @@ public class Parser
 
         if (_currentToken.Type == TokenType.String)
         {
-            var node = new ValueNode(_currentToken);
+            var node = new ValueNode(_currentToken,DataType.String);
             NextToken();
             return node;
         }
 
         if (_currentToken.Type == TokenType.Boolean)
         {
-            var node = new BoolNode(BooleanType.True);
+            var node = new ValueNode(_currentToken,DataType.Boolean);
             if (_currentToken.Value == "true")
-                node = new BoolNode(BooleanType.True);
+                node = new ValueNode(_currentToken,DataType.Boolean);
             if (_currentToken.Value == "false")
-                node = new BoolNode(BooleanType.False);
+                node = new ValueNode(_currentToken,DataType.Boolean);
             NextToken();
             return node;
         }

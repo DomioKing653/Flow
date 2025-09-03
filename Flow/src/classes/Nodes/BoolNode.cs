@@ -5,7 +5,7 @@ namespace Flow.classes.Nodes;
 public class BoolNode(BooleanType type):Node
 {
     private BooleanType Type { get; set; } = type;
-    public override Output.Output VisitNode()
+    public override Output.Output? VisitNode()
     {
         if (Type == BooleanType.True)
             return new ValueOutput(true);

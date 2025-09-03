@@ -2,18 +2,18 @@
 
 public class ValueOutput : Output
 {
-    public readonly string? Value;
-    public readonly bool? BoolValue;
-    public ValueOutput(string value)
+    public string? Value{get;set;}
+    public bool? BoolValue { get; set; }
+    public ValueOutput(string? value)
     {
         Value = value;
     }
 
-    public ValueOutput(bool value)
+    public ValueOutput(bool? value)
     {
         BoolValue = value;
     }
-    public override string ToString()
+    public override string? ToString()
     {
         return Value;
     }

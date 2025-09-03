@@ -20,10 +20,10 @@ class BinaryOpNode : Node
     {
         return $"({_left} {_opTok} {_right})";
     }
-    public override Output VisitNode()
+    public override Output? VisitNode()
     {
-        Output left1 = _left.VisitNode();
-        Output right1 = _right.VisitNode();
+        Output? left1 = _left.VisitNode();
+        Output? right1 = _right.VisitNode();
         if (left1 is ValueOutput leftOutput && right1 is ValueOutput rightOutput)
         {
             float r = float.Parse(rightOutput.Value);

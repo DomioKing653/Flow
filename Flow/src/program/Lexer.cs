@@ -99,7 +99,7 @@ public class Lexer
     private void MakeText()
     {
         string text = "";
-        while (char.IsLetter(_currentToken))
+        while (char.IsLetter(_currentToken)||float.TryParse(_currentToken.ToString(), out _))
         {
             text += _currentToken;
             NextChar();
@@ -133,6 +133,9 @@ public class Lexer
                 break;
             case "continue":
                 _tokens.Add(new Token(TokenType.Continue, null));
+                break;
+            case "print":
+                _tokens.Add(new Token(TokenType.Print, null));
                 break;
             default:
                 _tokens.Add(new Token(TokenType.Identifier, text));

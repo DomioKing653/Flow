@@ -11,7 +11,7 @@ public class VariableAccessNode(Token identifier) : Node
     {
         return Identifier.Value;
     }
-    public override Output VisitNode()
+    public override Output? VisitNode()
     {
         var variable = VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == Identifier.Value);
         if (variable is null)
