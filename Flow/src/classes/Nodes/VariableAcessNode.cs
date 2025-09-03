@@ -11,6 +11,7 @@ public class VariableAccessNode(Token identifier) : Node
     {
         return Identifier.Value;
     }
+
     public override Output? VisitNode()
     {
         var variable = VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == Identifier.Value);
@@ -18,6 +19,10 @@ public class VariableAccessNode(Token identifier) : Node
         {
             throw new OutputError($"Variable {Identifier.Value} not found");
         }
+
+        if (variable.boolValue is not null)
+            return new ValueOutput(variable.boolValue);
+
         return new ValueOutput(variable.Value);
     }
 }

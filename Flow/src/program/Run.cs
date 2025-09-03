@@ -20,7 +20,9 @@ static class Run
             Interpreter interpreter = new Interpreter();
             interpreter.Interpret(ast);
         }
+
         var exit = false;
+        Console.WriteLine("Welcome to the Flow! Write 'help' for more info");
         while (!exit)
         {
             try
@@ -31,12 +33,12 @@ static class Run
                     case "exit":
                         exit = true;
                         break;
+                    case "help":
+                        Console.WriteLine("Usage: Flow.exe <code>, write f/F to run the <code>");
+                        break;
                     case "f":
                     case "F":
                     {
-                    #if _WINDOWS
-                        DoJob(code);
-                    #endif
                         var fileName = @"C:\Users\simon\RiderProjects\Flow\Flow\pl\Test.txt";
                         if (args is { Length: > 0 } && args[0] != "")
                         {
