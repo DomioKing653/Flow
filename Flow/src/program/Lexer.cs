@@ -197,10 +197,22 @@ public class Lexer
                     NextChar();
                     break;
                 case '=':
+                    if (_text[_tokenIdx + 1] == '=')
+                    {
+                        NextChar();
+                        _tokens.Add(new Token(TokenType.Equals, null));
+                        NextChar();
+                        break;
+                    }
                     _tokens.Add(new Token(TokenType.Equal, null));
                     NextChar();
                     break;
+                case '>':
+                    _tokens.Add(new Token(TokenType.GreaterThan, null));
+                    NextChar();
+                    break;
                 case ';':
+                    
                     _tokens.Add(new Token(TokenType.Semicolon, null));
                     NextChar();
                     break;

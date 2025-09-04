@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Flow.classes;
 using Flow.classes.Nodes;
+using Flow.classes.Nodes.LogicOperators;
 using Flow.Nodes;
 
 namespace Flow.Program;
@@ -72,7 +73,13 @@ public class Parser
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
             var node = new ValueNode(_currentToken,DataType.Number);
+            var curTok= _currentToken;
             NextToken();
+            if (_currentToken.Type == TokenType.GreaterThan)
+            {
+                NextToken();
+                return new GreaterThanNode(curTok,_currentToken);
+            }
             return node;
         }
         else if (_currentToken is { Type: TokenType.Lparen })

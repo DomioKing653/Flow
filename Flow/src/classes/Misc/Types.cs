@@ -42,6 +42,10 @@ public enum TokenType
     Print,
     Input,
 
+    //LogicalOps
+    Equals,
+    GreaterThan,
+
     //Misc.
     Identifier,
     Semicolon,
