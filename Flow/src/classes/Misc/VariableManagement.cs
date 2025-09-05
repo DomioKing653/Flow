@@ -3,11 +3,13 @@ using Flow.Nodes;
 
 namespace Flow;
 
-public class Variable: Output
+public class Variable : Output
 {
+    public float? FltValue;
     public string? Value { get; set; }
     public string Identifier { get; }
     public bool? boolValue { get; set; }
+
     public Variable(string identifier, string value)
     {
         Value = value;
@@ -19,7 +21,12 @@ public class Variable: Output
         Identifier = identifier;
         boolValue = value;
     }
-    
+
+    public Variable(string identifier, float? value)
+    {
+        Identifier = identifier;
+        FltValue = value;
+    }
 
 
     public override string ToString()
@@ -31,10 +38,11 @@ public class Variable: Output
 public static class VariableManagement
 {
     public static readonly List<Variable?> Variables = new List<Variable?>();
-    
+
     public static Output? AddVariable(VariableNode varNode)
     {
-        var var = VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == varNode.Identifier.Value);
+        var var =
+            VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == varNode.Identifier.Value);
         Output? output = varNode.Value.VisitNode();
         if (var is null)
         {
@@ -45,30 +53,36 @@ public static class VariableManagement
                     Variable variable = null;
                     if (valueOutput.BoolValue is not null)
                     {
-                        variable = new Variable(varNode.Identifier.Value, valueOutput.BoolValue);    
+                        variable = new Variable(varNode.Identifier.Value, valueOutput.BoolValue);
                     }
-                    else
+                    else if (valueOutput.Value is not null)
                     {
                         variable = new Variable(varNode.Identifier.Value, valueOutput.Value);
                     }
+                    else
+                    {
+                        variable = new Variable(varNode.Identifier.Value, valueOutput.FloatValue);
+                    }
+
                     Variables.Add(variable);
                     return new Output();
                 }
             }
-
         }
         else
         {
-
             if (output is ValueOutput valueOutput)
             {
-                var.Value=valueOutput.Value;
+                if (valueOutput.BoolValue is not null)
+                    var.boolValue = valueOutput.BoolValue;
+                else if (valueOutput.Value is not null)
+                    var.Value = valueOutput.Value;
+                else if (valueOutput.FloatValue is not null)
+                    var.FltValue = valueOutput.FloatValue;
                 return null;
             }
-                
-            
         }
-        
+
 
         throw new OutputError("Invalid value in variable assignment.");
     }

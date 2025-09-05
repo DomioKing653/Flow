@@ -20,7 +20,6 @@ public class WhileNode(Node expression) : ProgramListNode
                     {
                         node.VisitNode();
                     }
-
                     expr = expression.VisitNode();
                 }
             }

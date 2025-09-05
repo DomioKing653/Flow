@@ -137,6 +137,12 @@ public class Lexer
             case "print":
                 _tokens.Add(new Token(TokenType.Print, null));
                 break;
+            case "ConvertToFloat":
+                _tokens.Add(new Token(TokenType.ConvertToFloat, null));
+                break;
+            case "ConvertToBoolean":
+                _tokens.Add(new Token(TokenType.ConvertToBoolean, null));
+                break;
             default:
                 _tokens.Add(new Token(TokenType.Identifier, text));
                 break;

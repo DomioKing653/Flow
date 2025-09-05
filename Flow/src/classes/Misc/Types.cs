@@ -41,6 +41,8 @@ public enum TokenType
     Println,
     Print,
     Input,
+    ConvertToFloat,
+    ConvertToBoolean,
 
     //LogicalOps
     Equals,

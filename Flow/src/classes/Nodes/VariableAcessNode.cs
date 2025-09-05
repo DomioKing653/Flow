@@ -22,7 +22,9 @@ public class VariableAccessNode(Token identifier) : Node
 
         if (variable.boolValue is not null)
             return new ValueOutput(variable.boolValue);
-
-        return new ValueOutput(variable.Value);
+        else if (variable.FltValue is not null)
+            return new ValueOutput(variable.FltValue);
+        else
+            return new ValueOutput(variable.Value);
     }
 }
