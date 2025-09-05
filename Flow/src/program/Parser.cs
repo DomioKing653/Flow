@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Flow.classes;
+﻿using Flow.classes;
 using Flow.classes.Nodes;
 using Flow.classes.Nodes.LogicOperators;
 using Flow.Nodes;
@@ -73,12 +72,14 @@ public class Parser
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
             var node = new ValueNode(_currentToken,DataType.Number);
-            var curTok= _currentToken;
+            var leftToken= _currentToken;
             NextToken();
             if (_currentToken.Type == TokenType.GreaterThan)
             {
                 NextToken();
-                return new GreaterThanNode(curTok,_currentToken);
+                var rightToken = _currentToken;
+                NextToken();
+                return new GreaterThanNode(leftToken,rightToken);
             }
             return node;
         }
@@ -251,7 +252,7 @@ public class Parser
         }
     }
 
-    public void If(ProgramListNode node)
+    private void If(ProgramListNode node)
     {
         NextToken();
         if (_currentToken.Type != TokenType.Lparen)

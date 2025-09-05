@@ -99,7 +99,7 @@ public class Lexer
     private void MakeText()
     {
         string text = "";
-        while (char.IsLetter(_currentToken)||float.TryParse(_currentToken.ToString(), out _))
+        while (char.IsLetter(_currentToken) || float.TryParse(_currentToken.ToString(), out _) || _currentToken == '_')
         {
             text += _currentToken;
             NextChar();
@@ -204,6 +204,7 @@ public class Lexer
                         NextChar();
                         break;
                     }
+
                     _tokens.Add(new Token(TokenType.Equal, null));
                     NextChar();
                     break;
@@ -212,7 +213,6 @@ public class Lexer
                     NextChar();
                     break;
                 case ';':
-                    
                     _tokens.Add(new Token(TokenType.Semicolon, null));
                     NextChar();
                     break;
@@ -238,7 +238,7 @@ public class Lexer
                 default:
                     bool isNumber = int.TryParse(_currentToken.ToString(), out int _);
                     bool isLetter = char.IsLetter(_currentToken);
-                    if (isLetter)
+                    if (isLetter || _currentToken == '_')
                     {
                         MakeText();
                     }

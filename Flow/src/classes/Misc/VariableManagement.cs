@@ -5,7 +5,7 @@ namespace Flow;
 
 public class Variable: Output
 {
-    public string? Value { get; }
+    public string? Value { get; set; }
     public string Identifier { get; }
     public bool? boolValue { get; set; }
     public Variable(string identifier, string value)
@@ -30,28 +30,45 @@ public class Variable: Output
 
 public static class VariableManagement
 {
-    public static  List<Variable?> Variables = new List<Variable?>();
+    public static readonly List<Variable?> Variables = new List<Variable?>();
+    
     public static Output? AddVariable(VariableNode varNode)
-    { 
+    {
+        var var = VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == varNode.Identifier.Value);
         Output? output = varNode.Value.VisitNode();
-
-        if (output is ValueOutput valueOutput)
+        if (var is null)
         {
-            if (varNode.Identifier.Value != null)
+            if (output is ValueOutput valueOutput)
             {
-                Variable variable = null;
-                if (valueOutput.BoolValue is not null)
+                if (varNode.Identifier.Value != null)
                 {
-                    variable = new Variable(varNode.Identifier.Value, valueOutput.BoolValue);    
+                    Variable variable = null;
+                    if (valueOutput.BoolValue is not null)
+                    {
+                        variable = new Variable(varNode.Identifier.Value, valueOutput.BoolValue);    
+                    }
+                    else
+                    {
+                        variable = new Variable(varNode.Identifier.Value, valueOutput.Value);
+                    }
+                    Variables.Add(variable);
+                    return new Output();
                 }
-                else
-                {
-                    variable = new Variable(varNode.Identifier.Value, valueOutput.Value);
-                }
-                Variables.Add(variable);
-                return new Output();
             }
+
         }
+        else
+        {
+
+            if (output is ValueOutput valueOutput)
+            {
+                var.Value=valueOutput.Value;
+                return null;
+            }
+                
+            
+        }
+        
 
         throw new OutputError("Invalid value in variable assignment.");
     }

@@ -24,13 +24,12 @@ public class WhileNode(Node expression) : ProgramListNode
                     expr = expression.VisitNode();
                 }
             }
+
             return null;
         }
         else
         {
             return null;
         }
-
-        throw new SyntaxError("Expression", expression.ToString());
     }
 }
