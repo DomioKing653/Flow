@@ -14,7 +14,7 @@ public class WhileNode(Node expression) : ProgramListNode
         {
             if (value.BoolValue is not null)
             {
-                while (value.BoolValue == true)
+                while (value.BoolValue == BooleanType.True)
                 {
                     foreach (var node in Nodes)
                     {

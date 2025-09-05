@@ -68,6 +68,22 @@ public class Parser
 
     Node Factor()
     {
+        if (_currentToken.Type == TokenType.ConvertToBoolean)
+        {
+            NextToken();
+            if (_currentToken.Type != TokenType.Lparen)
+            {
+                throw new SyntaxError("(", _currentToken.Type.ToString());
+            }
+            NextToken();
+            var value=Factor();
+            if (_currentToken.Type != TokenType.Rparen)
+            {
+                throw new SyntaxError(")", _currentToken.Type.ToString());
+            }
+            NextToken();
+            return new ConvertToFloat(value);
+        }
         if (_currentToken.Type==TokenType.ConvertToFloat)
         {
             NextToken();

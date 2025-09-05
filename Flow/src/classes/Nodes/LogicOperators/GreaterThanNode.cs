@@ -11,11 +11,11 @@ public class GreaterThanNode(Token? left, Token? right) : Node
     {
         if(_leftToken>_rightToken)
         {
-            return new ValueOutput(true);
+            return new ValueOutput(BooleanType.True);
         }
         else
         {
-            return new ValueOutput(false);
+            return new ValueOutput(BooleanType.False);
         }
         throw new Exception("How is this possible lol");
     }

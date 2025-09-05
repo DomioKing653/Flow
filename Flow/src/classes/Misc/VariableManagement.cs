@@ -8,7 +8,7 @@ public class Variable : Output
     public float? FltValue;
     public string? Value { get; set; }
     public string Identifier { get; }
-    public bool? boolValue { get; set; }
+    public BooleanType? boolValue { get; set; }
 
     public Variable(string identifier, string value)
     {
@@ -16,7 +16,7 @@ public class Variable : Output
         Identifier = identifier;
     }
 
-    public Variable(string identifier, bool? value)
+    public Variable(string identifier, BooleanType? value)
     {
         Identifier = identifier;
         boolValue = value;

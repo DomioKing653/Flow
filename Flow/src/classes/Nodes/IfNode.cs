@@ -11,7 +11,7 @@ public class IfNode(Node expression):ProgramListNode
         var expr=expression.VisitNode();
         if (expr is ValueOutput { BoolValue: not null } value)
         {
-            if(value.BoolValue == true)
+            if(value.BoolValue == BooleanType.True)
             {
                 foreach (var node in Nodes)
                 {

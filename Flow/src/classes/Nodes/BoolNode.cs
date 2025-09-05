@@ -8,9 +8,9 @@ public class BoolNode(BooleanType type):Node
     public override Output.Output? VisitNode()
     {
         if (Type == BooleanType.True)
-            return new ValueOutput(true);
+            return new ValueOutput(BooleanType.True);
         if (Type == BooleanType.False)
-            return new ValueOutput(false);
+            return new ValueOutput(BooleanType.False);
         throw new Exception("Invalid type lol");
     }
 }

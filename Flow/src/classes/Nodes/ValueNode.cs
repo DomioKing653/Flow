@@ -19,10 +19,10 @@ namespace Flow.classes.Nodes
             {
                 if (Token.Value == "true")
                 {
-                    return new ValueOutput(true);        
+                    return new ValueOutput(BooleanType.True);        
                 }else
                 {
-                    return new ValueOutput(false);
+                    return new ValueOutput(BooleanType.False);
                 }
             }
             else
