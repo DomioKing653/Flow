@@ -78,42 +78,9 @@ Můžeš používat závorky ( a ) pro určení priority operací:
 let result = (10 + 5) * 2;
 ```
 
----
-## Výpis
-Výpis na obrazovku
-Pro zobrazení hodnot použij příkaz println.
+### Komentáře
 
-Syntaxe
-```println(výraz);```
-```výraz```: může být číslo, proměnná, nebo aritmetický výraz
-
-Příklad
-```
-let x = 42;
-println(x);
-println(x + 8);
-```
-Výstupem bude: 
-
-42
-
-50
-
----
-## Vstup  od uživatele
-Funkce```input()``` aktuálně vrací pouze int.
-příklad:
-```
-let i  = 50;
-let in = input();
-let solution=i*in;
-println(solution);
-```
-
----
-## Komentáře
-
-```#Toto je koment``` 
+```#Toto je koment```
 ---
 ### Chybové hlášky
 ```Syntax error: expected ... found ...``` — znamená, že ve zdrojovém kódu je nějaká nesprávná syntaxe (např. chybí středník nebo špatně napsaný příkaz)
@@ -154,3 +121,50 @@ println(x);
 Chyba:
 
 ```Syntax error: expected Semicolon found:EOF```
+
+---
+# Funkce
+## Println
+Výpis na obrazovku
+Pro zobrazení hodnot použij příkaz println.
+
+Syntaxe
+```println(výraz);```
+```výraz```: může být číslo, proměnná, aritmetický výraz nebo string
+
+Příklad
+```
+let x = 42;
+println(x);
+println(x + 8);
+```
+Výstupem bude: 
+
+42
+
+50
+
+---
+## input
+Funkce```input()``` defaultně pouze string.
+
+#### příklad:
+```
+let i  = 50;
+let in = input();
+let solution=i*in;
+println(solution);
+```
+
+---
+### ConvertToFloat
+Funcke
+```ConvertToFloat(výraz)``` vratí 
+```Výraz``` zkonvertovaný to typu float
+
+#### Například:
+```
+let i = ConvertToFloat(input());#i=6
+println(i+5);#Výsledek je 11 
+```
+

@@ -5,10 +5,11 @@ namespace Flow;
 
 public class Variable : Output
 {
+    public bool Used;
     public float? FltValue;
     public string? Value { get; set; }
     public string Identifier { get; }
-    public BooleanType? boolValue { get; set; }
+    public BooleanType? BoolValue { get; set; }
 
     public Variable(string identifier, string value)
     {
@@ -19,7 +20,7 @@ public class Variable : Output
     public Variable(string identifier, BooleanType? value)
     {
         Identifier = identifier;
-        boolValue = value;
+        BoolValue = value;
     }
 
     public Variable(string identifier, float? value)
@@ -64,6 +65,7 @@ public static class VariableManagement
                         variable = new Variable(varNode.Identifier.Value, valueOutput.FloatValue);
                     }
 
+                    variable.Used = false;
                     Variables.Add(variable);
                     return new Output();
                 }
@@ -74,7 +76,7 @@ public static class VariableManagement
             if (output is ValueOutput valueOutput)
             {
                 if (valueOutput.BoolValue is not null)
-                    var.boolValue = valueOutput.BoolValue;
+                    var.BoolValue = valueOutput.BoolValue;
                 else if (valueOutput.Value is not null)
                     var.Value = valueOutput.Value;
                 else if (valueOutput.FloatValue is not null)

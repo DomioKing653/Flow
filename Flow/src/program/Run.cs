@@ -1,5 +1,6 @@
 ﻿using Flow.classes;
 using Flow.Program;
+using Flow.WarningManager;
 
 namespace Flow;
 
@@ -13,14 +14,16 @@ static class Run
     {
         void ProgramLoop(string? code)
         {
+            Console.ForegroundColor = ConsoleColor.White;
             Lexer lexer = new Lexer(code);
             List<Token> tokens = lexer.Tokenize();
             Parser parser = new Parser(tokens);
             Node? ast = parser.Parse();
             Interpreter interpreter = new Interpreter();
             interpreter.Interpret(ast);
+            WarningsCreator.CrateWarnings(VariableManagement.Variables);
         }
-        
+
         var fileName = @"C:\Users\simon\RiderProjects\Flow\Flow\pl\Test.txt";
         if (args is { Length: > 0 } && args[0] != "")
         {
@@ -29,12 +32,14 @@ static class Run
                 fileName = args[0];
             }
         }
+
         var exit = false;
         Console.WriteLine("Welcome to the Flow! Write 'help' for more info");
         while (!exit)
         {
             try
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 var code = UserInput.Shell();
                 switch (code)
                 {
@@ -50,7 +55,6 @@ static class Run
                     case "f":
                     case "F":
                     {
-
                         Console.WriteLine("Parsing: " + fileName);
                         var input = File.ReadAllText(fileName);
                         Console.WriteLine(input);

@@ -3,7 +3,7 @@ using Flow.Program;
 
 namespace Flow.classes.Nodes.Functions;
 
-public class ConvertToBool(Node value):Node
+public class ConvertToBool(Node value) : Node
 {
     public override Output.Output? VisitNode()
     {
@@ -11,15 +11,19 @@ public class ConvertToBool(Node value):Node
         {
             if (output.Value == "true")
             {
-                return new  ValueOutput(BooleanType.True);
+                return new ValueOutput(BooleanType.True);
             }
-            else if (output.Value == "false")
+            else
             {
-                return new  ValueOutput(BooleanType.False);
+                if (output.Value == "false")
+                {
+                    return new ValueOutput(BooleanType.False);
+                }
             }
 
             throw new OutputError("Cannot convert value to bool");
         }
+
         throw new OutputError("Cannot convert value to bool");
     }
 }

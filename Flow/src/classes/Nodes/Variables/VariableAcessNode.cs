@@ -7,7 +7,7 @@ public class VariableAccessNode(Token identifier) : Node
 {
     private Token Identifier { get; } = identifier;
 
-    public override string ToString()
+    public override string? ToString()
     {
         return Identifier.Value;
     }
@@ -20,8 +20,9 @@ public class VariableAccessNode(Token identifier) : Node
             throw new OutputError($"Variable {Identifier.Value} not found");
         }
 
-        if (variable.boolValue is not null)
-            return new ValueOutput(variable.boolValue);
+        variable.Used = true;
+        if (variable.BoolValue is not null)
+            return new ValueOutput(variable.BoolValue);
         else if (variable.FltValue is not null)
             return new ValueOutput(variable.FltValue);
         else

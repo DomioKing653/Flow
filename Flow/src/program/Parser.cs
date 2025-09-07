@@ -1,5 +1,6 @@
 ﻿using Flow.classes;
 using Flow.classes.Nodes;
+using Flow.classes.Nodes.Functions;
 using Flow.classes.Nodes.LogicOperators;
 using Flow.Nodes;
 
@@ -12,6 +13,7 @@ public class SyntaxError(string expected, string details) : Exception
 {
     public override string ToString()
     {
+        Console.ForegroundColor = ConsoleColor.Red;
         return $"Syntax error: expected {expected} found:{details}";
     }
 }
@@ -75,47 +77,51 @@ public class Parser
             {
                 throw new SyntaxError("(", _currentToken.Type.ToString());
             }
+
             NextToken();
-            var value=Factor();
+            var value = Factor();
             if (_currentToken.Type != TokenType.Rparen)
             {
                 throw new SyntaxError(")", _currentToken.Type.ToString());
             }
+
             NextToken();
-            return new ConvertToFloat(value);
+            return new ConvertToBool(value);
         }
-        if (_currentToken.Type==TokenType.ConvertToFloat)
+
+        if (_currentToken.Type == TokenType.ConvertToFloat)
         {
             NextToken();
             if (_currentToken.Type != TokenType.Lparen)
             {
                 throw new SyntaxError("(", _currentToken.Type.ToString());
             }
+
             NextToken();
-            var value=Factor();
+            var value = Factor();
             if (_currentToken.Type != TokenType.Rparen)
             {
                 throw new SyntaxError(")", _currentToken.Type.ToString());
             }
+
             NextToken();
             return new ConvertToFloat(value);
         }
+
         TokenType[] numbs = [TokenType.Float, TokenType.Int];
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
-            var node = new ValueNode(_currentToken,DataType.Number);
-            var leftToken= _currentToken;
+            var node = new ValueNode(_currentToken, DataType.Number);
+            var leftToken = _currentToken;
             NextToken();
-            if (_currentToken.Type == TokenType.GreaterThan)
-            {
-                NextToken();
-                var rightToken = _currentToken;
-                NextToken();
-                return new GreaterThanNode(leftToken,rightToken);
-            }
-            return node;
+            if (_currentToken.Type != TokenType.GreaterThan) return node;
+            NextToken();
+            var rightToken = _currentToken;
+            NextToken();
+            return new GreaterThanNode(leftToken, rightToken);
         }
-        else if (_currentToken is { Type: TokenType.Lparen })
+
+        if (_currentToken is { Type: TokenType.Lparen })
         {
             NextToken();
             Node left = Expr();
@@ -130,18 +136,18 @@ public class Parser
 
         if (_currentToken.Type == TokenType.String)
         {
-            var node = new ValueNode(_currentToken,DataType.String);
+            var node = new ValueNode(_currentToken, DataType.String);
             NextToken();
             return node;
         }
 
         if (_currentToken.Type == TokenType.Boolean)
         {
-            var node = new ValueNode(_currentToken,DataType.Boolean);
+            var node = new ValueNode(_currentToken, DataType.Boolean);
             if (_currentToken.Value == "true")
-                node = new ValueNode(_currentToken,DataType.Boolean);
+                node = new ValueNode(_currentToken, DataType.Boolean);
             if (_currentToken.Value == "false")
-                node = new ValueNode(_currentToken,DataType.Boolean);
+                node = new ValueNode(_currentToken, DataType.Boolean);
             NextToken();
             return node;
         }
