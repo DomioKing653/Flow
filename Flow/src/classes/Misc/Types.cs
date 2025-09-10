@@ -55,7 +55,14 @@ public enum TokenType
     Semicolon,
     OpeningParenthesis,
     ClosingParenthesis,
+    Comma,
 
     //End
     Eof,
+}
+
+public enum VariableType
+{
+    Argument,
+    Variable,
 }

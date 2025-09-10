@@ -3,6 +3,10 @@ using Flow.Nodes;
 
 namespace Flow;
 
+public class Argument(string id)
+{
+    public string Id { get; set; } = id;
+}
 public class Variable : Output
 {
     public bool Used;
@@ -40,7 +44,7 @@ public static class VariableManagement
 {
     public static readonly List<Variable?> Variables = new List<Variable?>();
 
-    public static Output? AddVariable(VariableNode varNode)
+    public static Output? AddVariable(VariableNode varNode,VariableType varType)
     {
         var var =
             VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == varNode.Identifier.Value);

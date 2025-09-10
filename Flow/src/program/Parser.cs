@@ -1,6 +1,7 @@
 ﻿using Flow.classes;
 using Flow.classes.Nodes;
 using Flow.classes.Nodes.Functions;
+using Flow.classes.Nodes.KeywordBranches;
 using Flow.classes.Nodes.LogicOperators;
 using Flow.Nodes;
 
@@ -317,6 +318,10 @@ public class Parser
             {
                 args.Add(_currentToken.Value);
                 NextToken();
+                if (_currentToken.Type is not TokenType.Comma)
+                {
+                    throw new SyntaxError("Comma", $"{_currentToken}");
+                }
             }
             else if (_currentToken.Type == TokenType.Rparen)
             {
@@ -330,7 +335,17 @@ public class Parser
         }
 
         NextToken();
-        if(_currentToken.Type != TokenType.OpeningParenthesis){}
+        if (_currentToken.Type != TokenType.OpeningParenthesis)
+        {
+            throw new SyntaxError("'{'", $"{_currentToken}");
+        }
+        NextToken();
+        var funcNode = new FunctionNode(args);
+        while (_currentToken.Type != TokenType.ClosingParenthesis)
+        {
+            Statement(funcNode);
+            NextToken();
+        }
     }
 
     private void If(ProgramListNode node)
