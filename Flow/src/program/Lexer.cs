@@ -143,6 +143,9 @@ public class Lexer
             case "ConvertToBoolean":
                 _tokens.Add(new Token(TokenType.ConvertToBoolean, null));
                 break;
+            case "fn":
+                _tokens.Add(new Token(TokenType.Fn, null));
+                break;
             default:
                 _tokens.Add(new Token(TokenType.Identifier, text));
                 break;
@@ -239,6 +242,10 @@ public class Lexer
                     break;
                 case '}':
                     _tokens.Add(new Token(TokenType.ClosingParenthesis, null));
+                    NextChar();
+                    break;
+                case '!':
+                    _tokens.Add(new Token(TokenType.Compare,null));
                     NextChar();
                     break;
                 default:

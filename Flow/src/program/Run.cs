@@ -1,29 +1,82 @@
-﻿using Flow.classes;
+﻿using System.Diagnostics;
+using Flow;
+using Flow.classes;
+using Flow.program;
 using Flow.Program;
 using Flow.WarningManager;
 
-namespace Flow;
-
-/*
- * Run
- */
-
 static class Run
 {
-    public static void Main(string[]? args)
+    private static Task spinnerLexer;
+    private static Task spinnerParser;
+
+    static async Task ProgramLoop(string? code)
     {
-        void ProgramLoop(string? code)
+        CancellationTokenSource? ctsLexer = null;
+        CancellationTokenSource? ctsParser = null;
+
+        try
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            
+            /*
+             * Lexer
+             */
+            ctsLexer = new CancellationTokenSource();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Stopwatch swLexer = Stopwatch.StartNew();
+            spinnerLexer = Task.Run(() => Spinner.Spin("Tokenizing", ctsLexer.Token));
             Lexer lexer = new Lexer(code);
             List<Token> tokens = lexer.Tokenize();
+            ctsLexer.Cancel();
+            await spinnerLexer;
+            swLexer.Stop();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(swLexer.Elapsed);
+
+            /*
+             * Parser
+             */
+            ctsParser = new CancellationTokenSource();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Stopwatch swParser = Stopwatch.StartNew();
+            spinnerParser = Task.Run(() => Spinner.Spin("Parsing", ctsParser.Token));
             Parser parser = new Parser(tokens);
             Node? ast = parser.Parse();
+            ctsParser.Cancel();
+            await spinnerParser;
+            swParser.Stop();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("   " + swParser.Elapsed);
+            Console.WriteLine();
+
+            /*
+             * Interpreter
+             */
+            Stopwatch programStopwatch = Stopwatch.StartNew();
             Interpreter interpreter = new Interpreter();
             interpreter.Interpret(ast);
+            programStopwatch.Stop();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Program ended in{programStopwatch.Elapsed}!");
+            Console.ResetColor();
+            /*
+             * Warnings
+             */
             WarningsCreator.CrateWarnings(VariableManagement.Variables);
         }
+        finally
+        {
+            if (ctsLexer != null) await ctsLexer.CancelAsync();
+            if (ctsParser != null) await ctsParser.CancelAsync();
 
+            if (spinnerLexer != null) await spinnerLexer;
+            if (spinnerParser != null) await spinnerParser;
+        }
+    }
+
+
+    public static async Task Main(string[]? args)
+    {
         var fileName = @"C:\Users\simon\RiderProjects\Flow\Flow\pl\Test.txt";
         if (args is { Length: > 0 } && args[0] != "")
         {
@@ -55,23 +108,41 @@ static class Run
                     case "f":
                     case "F":
                     {
+                        var input = await File.ReadAllTextAsync(fileName);
                         Console.WriteLine("Parsing: " + fileName);
-                        var input = File.ReadAllText(fileName);
                         Console.WriteLine(input);
                         Console.WriteLine("##############################################");
-                        ProgramLoop(input);
+                        await ProgramLoop(input);
                         break;
                     }
                     default:
                     {
-                        ProgramLoop(code);
+                        await ProgramLoop(code);
                         break;
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                if (spinnerLexer != null)
+                {
+                    await spinnerLexer;
+                }
+
+                if (spinnerParser != null)
+                {
+                    await spinnerParser;
+                }
+
+                Console.WriteLine();
+                Console.ResetColor();
+                Console.WriteLine(
+                    "╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"║{e}");
+                Console.ResetColor();
+                Console.WriteLine(
+                    "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             }
         }
     }

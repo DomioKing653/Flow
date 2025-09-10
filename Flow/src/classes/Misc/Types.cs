@@ -36,6 +36,8 @@ public enum TokenType
     If,
     Continue,
     Break,
+    Compare,
+    Fn,
 
     //Functions
     Println,

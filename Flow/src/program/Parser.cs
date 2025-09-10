@@ -13,7 +13,6 @@ public class SyntaxError(string expected, string details) : Exception
 {
     public override string ToString()
     {
-        Console.ForegroundColor = ConsoleColor.Red;
         return $"Syntax error: expected {expected} found:{details}";
     }
 }
@@ -70,6 +69,17 @@ public class Parser
 
     Node Factor()
     {
+        if (_currentToken.Type == TokenType.Compare)
+        {
+            NextToken();
+            var valueL = Factor();
+            if (_currentToken.Type == TokenType.GreaterThan)
+            {
+                NextToken();
+                return new CompareNode(valueL, TokenType.GreaterThan, Factor());
+            }
+        }
+
         if (_currentToken.Type == TokenType.ConvertToBoolean)
         {
             NextToken();
@@ -112,13 +122,8 @@ public class Parser
         if (_currentToken != null && numbs.Contains(_currentToken.Type))
         {
             var node = new ValueNode(_currentToken, DataType.Number);
-            var leftToken = _currentToken;
             NextToken();
-            if (_currentToken.Type != TokenType.GreaterThan) return node;
-            NextToken();
-            var rightToken = _currentToken;
-            NextToken();
-            return new GreaterThanNode(leftToken, rightToken);
+            return node;
         }
 
         if (_currentToken is { Type: TokenType.Lparen })
@@ -290,6 +295,44 @@ public class Parser
         }
     }
 
+    private void Function(ProgramListNode node)
+    {
+        List<string> args = new List<string>();
+        NextToken();
+        if (_currentToken.Type != TokenType.Identifier)
+        {
+            throw new SyntaxError("Identifier", $"{_currentToken}");
+        }
+
+        NextToken();
+        if (_currentToken.Type != TokenType.Lparen)
+        {
+            throw new SyntaxError("(", $"{_currentToken}");
+        }
+
+        NextToken();
+        while (_currentToken.Type != TokenType.Rparen)
+        {
+            if (_currentToken.Type == TokenType.Identifier)
+            {
+                args.Add(_currentToken.Value);
+                NextToken();
+            }
+            else if (_currentToken.Type == TokenType.Rparen)
+            {
+                NextToken();
+                break;
+            }
+            else
+            {
+                throw new SyntaxError("argument", $"{_currentToken}");
+            }
+        }
+
+        NextToken();
+        if(_currentToken.Type != TokenType.OpeningParenthesis){}
+    }
+
     private void If(ProgramListNode node)
     {
         NextToken();
@@ -351,6 +394,9 @@ public class Parser
                 break;
             case TokenType.If:
                 If(listNode);
+                break;
+            case TokenType.Fn:
+                Function(listNode);
                 break;
             default:
                 throw new SyntaxError("Statement", $"{_currentToken}");

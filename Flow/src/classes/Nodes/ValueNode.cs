@@ -25,9 +25,14 @@ namespace Flow.classes.Nodes
                     return new ValueOutput(BooleanType.False);
                 }
             }
-            else
+            if(Type == DataType.String)
             {
                 return new ValueOutput(Token?.Value);
+            }
+
+            if (Type == DataType.Number)
+            {
+                return new ValueOutput(float.Parse(Token?.Value));    
             }
             throw new System.NotImplementedException();
         }
