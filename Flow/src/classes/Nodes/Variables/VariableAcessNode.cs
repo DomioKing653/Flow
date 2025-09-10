@@ -14,18 +14,22 @@ public class VariableAccessNode(Token identifier) : Node
 
     public override Output? VisitNode()
     {
-        var variable = VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == Identifier.Value);
+        var variable = VariableManagement.Variables.FirstOrDefault(v => v != null && v.Id == Identifier.Value);
         if (variable is null)
         {
             throw new OutputError($"Variable {Identifier.Value} not found");
         }
 
-        variable.Used = true;
-        if (variable.BoolValue is not null)
-            return new ValueOutput(variable.BoolValue);
-        else if (variable.FltValue is not null)
-            return new ValueOutput(variable.FltValue);
-        else
-            return new ValueOutput(variable.Value);
+        if (variable is NormalVariable varNormal)
+        {
+            variable.Used = true;
+            if (varNormal.BoolValue is not null)
+                return new ValueOutput(varNormal.BoolValue);
+            else if (varNormal.FltValue is not null)
+                return new ValueOutput(varNormal.FltValue);
+            else
+                return new ValueOutput(varNormal.Value);    
+        }
+        throw new OutputError($"Variable {Identifier.Value} not found");
     }
 }

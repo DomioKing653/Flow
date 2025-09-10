@@ -3,40 +3,48 @@ using Flow.Nodes;
 
 namespace Flow;
 
-public class Argument(string id)
+public abstract class Variable
 {
-    public string Id { get; set; } = id;
+    public abstract bool Used { get; set; }
+    public abstract string Id { get; set; }
 }
-public class Variable : Output
+
+public class Argument(string id):Variable
 {
-    public bool Used;
+    public override bool Used { get; set; }
+    public override string Id { get; set; } = id;
+}
+public class NormalVariable:Variable
+{
+    
+    public override bool Used{get;set;}
     public float? FltValue;
     public string? Value { get; set; }
-    public string Identifier { get; }
+    public override string Id { get; set; }
     public BooleanType? BoolValue { get; set; }
 
-    public Variable(string identifier, string value)
+    public NormalVariable(string id, string value)
     {
         Value = value;
-        Identifier = identifier;
+        Id = id;
     }
 
-    public Variable(string identifier, BooleanType? value)
+    public NormalVariable(string id, BooleanType? value)
     {
-        Identifier = identifier;
+        Id = id;
         BoolValue = value;
     }
 
-    public Variable(string identifier, float? value)
+    public NormalVariable(string id, float? value)
     {
-        Identifier = identifier;
+        Id = id;
         FltValue = value;
     }
 
 
     public override string ToString()
     {
-        return $"{Identifier} = {Value}";
+        return $"{Id} = {Value}";
     }
 }
 
@@ -44,10 +52,17 @@ public static class VariableManagement
 {
     public static readonly List<Variable?> Variables = new List<Variable?>();
 
-    public static Output? AddVariable(VariableNode varNode,VariableType varType)
+    public static Output? AddVariable(VariableNode? varNode,VariableType varType)
     {
+        if (varNode == null)
+        {
+            if (varType == VariableType.Argument)
+            {
+                //Variables.Add(new Argument());
+            }
+        }
         var var =
-            VariableManagement.Variables.FirstOrDefault(v => v != null && v.Identifier == varNode.Identifier.Value);
+            VariableManagement.Variables.FirstOrDefault(v => v != null && v.Id == varNode.Identifier.Value);
         Output? output = varNode.Value.VisitNode();
         if (var is null)
         {
@@ -55,38 +70,42 @@ public static class VariableManagement
             {
                 if (varNode.Identifier.Value != null)
                 {
-                    Variable variable = null;
+                    NormalVariable normalVariable = null;
                     if (valueOutput.BoolValue is not null)
                     {
-                        variable = new Variable(varNode.Identifier.Value, valueOutput.BoolValue);
+                        normalVariable = new NormalVariable(varNode.Identifier.Value, valueOutput.BoolValue);
                     }
                     else if (valueOutput.Value is not null)
                     {
-                        variable = new Variable(varNode.Identifier.Value, valueOutput.Value);
+                        normalVariable = new NormalVariable(varNode.Identifier.Value, valueOutput.Value);
                     }
                     else
                     {
-                        variable = new Variable(varNode.Identifier.Value, valueOutput.FloatValue);
+                        normalVariable = new NormalVariable(varNode.Identifier.Value, valueOutput.FloatValue);
                     }
 
-                    variable.Used = false;
-                    Variables.Add(variable);
+                    normalVariable.Used = false;
+                    Variables.Add(normalVariable);
                     return new Output();
                 }
             }
         }
         else
         {
-            if (output is ValueOutput valueOutput)
+            if (var is  NormalVariable normalVariable)
             {
-                if (valueOutput.BoolValue is not null)
-                    var.BoolValue = valueOutput.BoolValue;
-                else if (valueOutput.Value is not null)
-                    var.Value = valueOutput.Value;
-                else if (valueOutput.FloatValue is not null)
-                    var.FltValue = valueOutput.FloatValue;
-                return null;
+                if (output is ValueOutput valueOutput)
+                {
+                    if (valueOutput.BoolValue is not null)
+                        normalVariable.BoolValue = valueOutput.BoolValue;
+                    else if (valueOutput.Value is not null)
+                        normalVariable.Value = valueOutput.Value;
+                    else if (valueOutput.FloatValue is not null)
+                        normalVariable.FltValue = valueOutput.FloatValue;
+                    return null;
+                }    
             }
+            
         }
 
 

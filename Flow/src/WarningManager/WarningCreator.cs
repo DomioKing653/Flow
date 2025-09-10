@@ -9,7 +9,7 @@ public static class WarningsCreator
         {
             if (variable.Used == true) continue;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"║Warning: variable {variable.Identifier} is in current context defined but never used! You can safely delete it or rename it _{variable.Identifier}.║");
+            Console.WriteLine($"║Warning: variable {variable.Id} is in current context defined but never used! You can safely delete it or rename it _{variable.Id}.║");
             Console.ResetColor();
         }
         
