@@ -9,9 +9,9 @@ public abstract class Variable
     public abstract string Id { get; set; }
 }
 
-public class Argument(string id):Variable
+public class Argument(string id,bool used):Variable
 {
-    public override bool Used { get; set; }
+    public override bool Used { get; set; } = used;
     public override string Id { get; set; } = id;
 }
 public class NormalVariable:Variable
@@ -52,13 +52,13 @@ public static class VariableManagement
 {
     public static readonly List<Variable?> Variables = new List<Variable?>();
 
-    public static Output? AddVariable(VariableNode? varNode,VariableType varType)
+    public static Output? AddVariable(VariableNode? varNode,VariableType varType,Argument? arg)
     {
         if (varNode == null)
         {
             if (varType == VariableType.Argument)
             {
-                //Variables.Add(new Argument());
+                Variables.Add(arg);
             }
         }
         var var =

@@ -322,6 +322,7 @@ public class Parser
                 {
                     throw new SyntaxError("Comma", $"{_currentToken}");
                 }
+                NextToken();
             }
             else if (_currentToken.Type == TokenType.Rparen)
             {
@@ -344,8 +345,9 @@ public class Parser
         while (_currentToken.Type != TokenType.ClosingParenthesis)
         {
             Statement(funcNode);
-            NextToken();
         }
+
+        NextToken();
     }
 
     private void If(ProgramListNode node)
