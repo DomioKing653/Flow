@@ -52,15 +52,8 @@ public static class VariableManagement
 {
     public static readonly List<Variable?> Variables = new List<Variable?>();
 
-    public static Output? AddVariable(VariableNode? varNode,VariableType varType,Argument? arg)
+    public static Output? AddVariable(VariableNode? varNode)
     {
-        if (varNode == null)
-        {
-            if (varType == VariableType.Argument)
-            {
-                Variables.Add(arg);
-            }
-        }
         var var =
             VariableManagement.Variables.FirstOrDefault(v => v != null && v.Id == varNode.Identifier.Value);
         Output? output = varNode.Value.VisitNode();

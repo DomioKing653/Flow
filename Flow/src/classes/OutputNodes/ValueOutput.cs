@@ -10,6 +10,10 @@ public class ValueOutput : Output
         Value = value;
     }
 
+    public ValueOutput()
+    {
+        
+    }
     public ValueOutput(BooleanType? value)
     {
         BoolValue = value;

@@ -181,8 +181,8 @@ public class Lexer
         {
             switch (_currentToken)
             {
-                case ',':
-                    _tokens.Add(new Token(TokenType.Comma, null));
+                case '|':
+                    _tokens.Add(new Token(TokenType.Pipe, null));
                     NextChar();
                     break;
                 case '+':

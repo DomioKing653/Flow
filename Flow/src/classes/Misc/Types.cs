@@ -55,7 +55,7 @@ public enum TokenType
     Semicolon,
     OpeningParenthesis,
     ClosingParenthesis,
-    Comma,
+    Pipe,
 
     //End
     Eof,

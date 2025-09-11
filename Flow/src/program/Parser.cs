@@ -1,6 +1,7 @@
 ﻿using Flow.classes;
 using Flow.classes.Nodes;
 using Flow.classes.Nodes.Functions;
+using Flow.classes.Nodes.Functions.FunctionManagment;
 using Flow.classes.Nodes.KeywordBranches;
 using Flow.classes.Nodes.LogicOperators;
 using Flow.Nodes;
@@ -160,8 +161,28 @@ public class Parser
 
         if (_currentToken is { Type: TokenType.Identifier })
         {
+            var id = _currentToken.Value;
             var node = new VariableAccessNode(_currentToken);
             NextToken();
+            if (_currentToken.Type == TokenType.Lparen)
+            {
+                NextToken();
+                List<Node> args = new List<Node>();
+                while (_currentToken.Type != TokenType.Rparen)
+                {
+                    args.Add(Factor());
+                    if (_currentToken.Type != TokenType.Pipe)
+                    {
+                        throw new SyntaxError("','", $"{_currentToken}");
+                    }
+
+                    NextToken();
+                }
+
+                NextToken();
+                return new FunctionAccessNode(args, id!);
+            }
+
             return node;
         }
 
@@ -305,6 +326,7 @@ public class Parser
             throw new SyntaxError("Identifier", $"{_currentToken}");
         }
 
+        var id = _currentToken.Value;
         NextToken();
         if (_currentToken.Type != TokenType.Lparen)
         {
@@ -318,10 +340,11 @@ public class Parser
             {
                 args.Add(_currentToken.Value);
                 NextToken();
-                if (_currentToken.Type is not TokenType.Comma)
+                if (_currentToken.Type is not TokenType.Pipe)
                 {
                     throw new SyntaxError("Comma", $"{_currentToken}");
                 }
+
                 NextToken();
             }
             else if (_currentToken.Type == TokenType.Rparen)
@@ -340,14 +363,16 @@ public class Parser
         {
             throw new SyntaxError("'{'", $"{_currentToken}");
         }
+
         NextToken();
-        var funcNode = new FunctionNode(args);
+        var funcNode = new FunctionNode(args, id);
         while (_currentToken.Type != TokenType.ClosingParenthesis)
         {
             Statement(funcNode);
         }
 
         NextToken();
+        node.Nodes.Add(funcNode);
     }
 
     private void If(ProgramListNode node)
