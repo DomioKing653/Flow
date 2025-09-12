@@ -104,9 +104,11 @@ public class Lexer
             text += _currentToken;
             NextChar();
         }
-
         switch (text)
         {
+            case "use":
+                _tokens.Add(new Token(TokenType.Use,null));
+                break;
             case "let":
                 _tokens.Add(new Token(TokenType.Let, null));
                 break;

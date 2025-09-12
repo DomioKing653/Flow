@@ -39,7 +39,7 @@ public enum TokenType
     Compare,
     Fn,
     Ret,
-
+    Use,
     //Functions
     Println,
     Print,
