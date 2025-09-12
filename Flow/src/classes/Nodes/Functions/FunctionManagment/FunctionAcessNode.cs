@@ -17,7 +17,6 @@ public class FunctionAccessNode(List<Node> args, string id) : Node
             }
         }
 
-
         if (variable is { } f)
         {
             foreach (var node in f.Nodes)

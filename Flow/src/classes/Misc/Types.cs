@@ -38,6 +38,7 @@ public enum TokenType
     Break,
     Compare,
     Fn,
+    Ret,
 
     //Functions
     Println,
@@ -59,10 +60,4 @@ public enum TokenType
 
     //End
     Eof,
-}
-
-public enum VariableType
-{
-    Argument,
-    Variable,
 }
